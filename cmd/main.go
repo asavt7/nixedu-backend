@@ -1,25 +1,22 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/asavt7/nixEducation/pkg/service"
+	"github.com/asavt7/nixEducation/pkg/storage"
 	"log"
-	"os"
 )
 
 func main() {
 
 	srv := service.NewRemoteService("https://jsonplaceholder.typicode.com/")
+	stora := storage.NewFsStorage("./storage/")
 
 	posts, err := srv.GetAll()
+
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	e := json.NewEncoder(os.Stdout)
-	e.SetIndent("    ", "    ")
-
-	err = e.Encode(posts)
+	_, err = stora.SaveAll(posts)
 	if err != nil {
 		log.Fatal(err)
 	}
