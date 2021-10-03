@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"sort"
+	"strconv"
+	"sync"
 )
 
 type RemoteService struct {
@@ -26,16 +29,44 @@ func (r *RemoteService) GetAll() ([]model.Post, error) {
 	u := r.RemoteUrl
 	u.Path = path.Join(r.RemoteUrl.Path, "posts")
 
-	response, err := http.Get(u.String())
-	if err != nil {
-		return nil, err
-	}
-	var posts []model.Post
+	wg := &sync.WaitGroup{}
 
-	err = json.NewDecoder(response.Body).Decode(&posts)
-	if err != nil {
-		return nil, err
+	resultCh := make(chan model.Post)
+	wg.Add(100)
+	for i := 1; i <= 100; i++ {
+		go func(postId int, wg *sync.WaitGroup, resultCh chan model.Post) {
+			nu := u
+			nu.Path = path.Join(r.RemoteUrl.Path, "posts", strconv.Itoa(postId))
+			response, err := http.Get(nu.String())
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			var post model.Post
+
+			err = json.NewDecoder(response.Body).Decode(&post)
+			if err != nil {
+				log.Fatal(err)
+			}
+			resultCh <- post
+			wg.Done()
+		}(i, wg, resultCh)
 	}
+
+	go func(wg *sync.WaitGroup, res chan model.Post) {
+		wg.Wait()
+		close(resultCh)
+	}(wg, resultCh)
+
+	posts := make([]model.Post, 0, 100)
+	for r := range resultCh {
+		posts = append(posts, r)
+	}
+
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Id < posts[j].Id
+	})
+
 	return posts, nil
 
 }
