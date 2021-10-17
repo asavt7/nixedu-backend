@@ -1,9 +1,17 @@
 version: "3.9"
 services:
-  #web:
-   # build: .
-    #ports:
-     # - "5000:5000"
+  backend-app:
+    image: nix-edu-backend:latest
+    build:
+      target: app
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
   redis:
     image: "redis:alpine"
     container_name: ${REDIS_HOST}
@@ -12,5 +20,31 @@ services:
       - ${REDIS_EXPOSE_PORT}:${REDIS_PORT}
     networks:
       - backend
+  db:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - `5432:${DB_PORT}`
+    networks:
+      - backend
+      - dbnet
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - dbnet
 networks:
   backend:
+  dbnet:
