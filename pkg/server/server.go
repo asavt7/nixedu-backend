@@ -20,7 +20,9 @@ func NewApiServer(handler *ApiHandler) *ApiServer {
 }
 
 func (srv *ApiServer) InitRoutes() {
-	srv.Echo.Use(middleware.Logger())
+	srv.Echo.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 	srv.Echo.Use(middleware.Recover())
 
 	srv.Echo.POST("/sign-in", srv.handler.signIn)

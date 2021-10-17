@@ -7,3 +7,11 @@ yes | migrate -path ./migrations/ -database 'postgres://postgres:password@localh
 migrate -path ./migrations/ -database 'postgres://postgres:password@localhost:5432/postgres?sslmode=disable' up
 ```
 
+### redis
+
+Запуск redis cli
+
+```
+docker exec -it redis-token-store redis-cli
+```
+

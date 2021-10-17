@@ -1,29 +1,23 @@
 package main
 
 import (
+	"github.com/asavt7/nixEducation/pkg/configs"
 	"github.com/asavt7/nixEducation/pkg/server"
 	"github.com/asavt7/nixEducation/pkg/service"
 	"github.com/asavt7/nixEducation/pkg/storage"
-	"log"
+	"github.com/asavt7/nixEducation/pkg/tokenstorage"
+	"time"
 )
 
 func main() {
 
-	db, err := storage.NewPostgreDb(storage.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		Password: "postgres",
-		DBName:   "postgres",
-		SSLMode:  "disable",
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	db := storage.NewPostgreDb(configs.InitPostgresConfig())
 	store := storage.NewPostgresStorage(db)
 
-	srvc := service.NewService(store)
+	redisCacheStore := tokenstorage.InitRedisClient(configs.InitRedisConf())
+	tokenStore := tokenstorage.NewTokenStorage(redisCacheStore, 10*time.Minute)
+
+	srvc := service.NewService(store, tokenStore)
 	handler := server.NewApiHandler(srvc)
 	srvr := server.NewApiServer(handler)
 	srvr.Run()

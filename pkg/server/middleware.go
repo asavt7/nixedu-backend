@@ -34,10 +34,15 @@ func (h *ApiHandler) TokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 		accessToken := tok.(*jwt.Token)
 		claims := accessToken.Claims.(*service.Claims)
 
-		if h.service.AuthorizationService.IsNeedToRefresh(*claims) {
+		err := h.service.ValidateAccessToken(claims)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
+		}
+
+		if h.service.AuthorizationService.IsNeedToRefresh(claims) {
 			rc, err := c.Cookie(refreshTokenCookieName)
 			if err == nil && rc != nil {
-				refreshClaims, err := h.service.ParseTokenToClaims(rc.Value)
+				refreshClaims, err := h.service.ParseRefreshTokenToClaims(rc.Value)
 				if err != nil {
 					if err == jwt.ErrSignatureInvalid {
 						return echo.NewHTTPError(http.StatusUnauthorized, "invalid token signature")
@@ -46,6 +51,11 @@ func (h *ApiHandler) TokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 				}
 
 				if claims.UserId != refreshClaims.UserId {
+					return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
+				}
+
+				err = h.service.AuthorizationService.ValidateRefreshToken(refreshClaims)
+				if err != nil {
 					return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 				}
 
@@ -60,6 +70,6 @@ func (h *ApiHandler) TokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 	}
 }
 
-func JWTErrorChecker(err error, c echo.Context) error {
+func JWTErrorChecker(err error, _ echo.Context) error {
 	return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 }

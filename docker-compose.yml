@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  #web:
+   # build: .
+    #ports:
+     # - "5000:5000"
+  redis:
+    image: "redis:alpine"
+    container_name: ${REDIS_HOST}
+    restart: unless-stopped
+    ports:
+      - ${REDIS_EXPOSE_PORT}:${REDIS_PORT}
+    networks:
+      - backend
+networks:
+  backend:

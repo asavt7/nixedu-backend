@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/asavt7/nixEducation/pkg/storage"
+	"github.com/asavt7/nixEducation/pkg/tokenstorage"
 	"time"
 )
 
@@ -23,8 +24,12 @@ type UserService interface {
 type AuthorizationService interface {
 	CheckUserCredentials(username string, password string) (model.User, error)
 	GenerateTokens(userId int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error)
-	ParseTokenToClaims(token string) (Claims, error)
-	IsNeedToRefresh(claims Claims) bool
+	ParseAccessTokenToClaims(token string) (*Claims, error)
+	ParseRefreshTokenToClaims(token string) (*Claims, error)
+	IsNeedToRefresh(claims *Claims) bool
+	Logout(accessTokenClaims *Claims) error
+	ValidateAccessToken(accessTokenClaims *Claims) error
+	ValidateRefreshToken(accessTokenClaims *Claims) error
 }
 
 type Service struct {
@@ -36,12 +41,15 @@ type Service struct {
 	CommentService
 }
 
-func NewService(storage *storage.Storage) *Service {
+func NewService(storage *storage.Storage, tokenStore *tokenstorage.TokenStorage) *Service {
 	return &Service{
-		storage:              storage,
-		AuthorizationService: &AuthorizationServiceImpl{repo: storage.UserStorage},
-		UserService:          nil,
-		PostService:          nil,
-		CommentService:       nil,
+		storage: storage,
+		AuthorizationService: &AuthorizationServiceImpl{
+			repo:       storage.UserStorage,
+			tokenStore: tokenStore,
+		},
+		UserService:    nil,
+		PostService:    nil,
+		CommentService: nil,
 	}
 }
