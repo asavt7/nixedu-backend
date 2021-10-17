@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
@@ -44,8 +45,6 @@ func (h *ApiHandler) generateTokensAndSetCookies(userId int, c echo.Context) (ac
 	}
 
 	h.setTokenCookie(accessTokenCookieName, accessToken, accessExp, c)
-	//h.setUserCookie(strconv.Itoa(userId), accessExp, c)
-
 	h.setTokenCookie(refreshTokenCookieName, refreshToken, refreshExp, c)
 
 	return accessToken, refreshToken, nil
@@ -70,4 +69,21 @@ func (h *ApiHandler) setUserCookie(userId string, expiration time.Time, c echo.C
 	cookie.Expires = expiration
 	cookie.Path = "/"
 	c.SetCookie(cookie)
+}
+
+type signUpUserInput struct {
+	Password string `json:"password"`
+	model.User
+}
+
+func (h *ApiHandler) signUp(c echo.Context) error {
+	u := new(signUpUserInput)
+	if err := c.Bind(u); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	createdUser, err := h.service.UserService.CreateUser(u.User, u.Password)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, createdUser)
 }

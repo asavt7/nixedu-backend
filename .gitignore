@@ -1,3 +1,2 @@
-./storage/**
 .idea
-storage
+mocks/**

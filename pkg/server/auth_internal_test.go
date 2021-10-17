@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	mock_service "github.com/asavt7/nixEducation/mocks/pkg/service"
 	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/asavt7/nixEducation/pkg/service"
@@ -13,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 const (
@@ -61,6 +63,7 @@ func TestSignUp(t *testing.T) {
 	}
 
 	srv := NewApiServer(NewApiHandler(mockService))
+	defer srv.Echo.Close()
 
 	t.Run("signUp ok", func(t *testing.T) {
 		createduserIdInt, _ := strconv.Atoi(createduserId)
@@ -88,6 +91,85 @@ func TestSignUp(t *testing.T) {
 		assertJsonResponse(t, createUserRsBodyExpected, rec.Body.String())
 	})
 
+}
+
+func TestSignIn(t *testing.T) {
+
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+	userService := mock_service.NewMockUserService(controller)
+	authService := mock_service.NewMockAuthorizationService(controller)
+
+	mockService := &service.Service{
+		AuthorizationService: authService,
+		UserService:          userService,
+		PostService:          nil,
+		CommentService:       nil,
+	}
+
+	srv := NewApiServer(NewApiHandler(mockService))
+	defer srv.Echo.Close()
+
+	userId := 1
+	accessToken := "accessToken"
+	refreshToken := "refreshToken"
+	user := model.User{
+		Id:           userId,
+		Username:     username,
+		Email:        email,
+		PasswordHash: password,
+	}
+
+	t.Run("ok", func(t *testing.T) {
+
+		authService.EXPECT().CheckUserCredentials(username, password).Return(user, nil)
+		authService.EXPECT().GenerateTokens(userId).Return(accessToken, refreshToken, time.Now(), time.Now(), nil)
+
+		req := httptest.NewRequest(echo.POST, "/sign-in", strings.NewReader(`{"username":"`+username+`","password":"`+password+`"}`))
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+
+		srv.Echo.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.True(t, anyMatch(rec.Header().Values("Set-Cookie"), func(s string) bool {
+			return strings.Contains(s, "access-token")
+		}))
+		assert.True(t, anyMatch(rec.Header().Values("Set-Cookie"), func(s string) bool {
+			return strings.Contains(s, "refresh-token")
+		}))
+		jsonassert.New(t).Assertf(rec.Body.String(), `{			"access-token": "<<PRESENCE>>",				"refresh-token": "<<PRESENCE>>"		}`)
+	})
+
+	t.Run("invalid username/password", func(t *testing.T) {
+
+		authService.EXPECT().CheckUserCredentials(username, password).Return(user, errors.New("invalid username/password"))
+		//authService.EXPECT().GenerateTokens(userId).Return(accessToken, refreshToken, time.Now(), time.Now(), nil)
+
+		req := httptest.NewRequest(echo.POST, "/sign-in", strings.NewReader(`{"username":"`+username+`","password":"`+password+`"}`))
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+
+		srv.Echo.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnauthorized, rec.Code)
+		assert.False(t, anyMatch(rec.Header().Values("Set-Cookie"), func(s string) bool {
+			return strings.Contains(s, "access-token")
+		}))
+		assert.False(t, anyMatch(rec.Header().Values("Set-Cookie"), func(s string) bool {
+			return strings.Contains(s, "refresh-token")
+		}))
+	})
+
+}
+
+func anyMatch(s []string, matchFunc func(s string) bool) bool {
+	for _, s2 := range s {
+		if matchFunc(s2) {
+			return true
+		}
+	}
+	return false
 }
 
 func assertJsonResponse(t *testing.T, expected, actual string) {
