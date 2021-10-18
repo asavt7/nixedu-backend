@@ -43,6 +43,11 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
+	currentUser := context.Get(currentUserId).(int)
+	if currentUser != userIdInt {
+		return response(http.StatusUnauthorized, "unauthorized", context)
+	}
+
 	post, err := h.service.PostService.Save(userIdInt, *newPost)
 	if err != nil {
 		switch err.(type) {
@@ -94,6 +99,11 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
+	currentUser := context.Get(currentUserId).(int)
+	if currentUser != userIdInt {
+		return response(http.StatusUnauthorized, "unauthorized", context)
+	}
+
 	if err := h.service.PostService.DeletePost(userIdInt, postIdInt); err != nil {
 		switch err.(type) {
 		case service.UserNotFoundErr, service.PostNotFoundErr:
@@ -116,6 +126,11 @@ func (h *ApiHandler) updatePost(context echo.Context) error {
 	postIdInt, err := strconv.Atoi(postId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
+	}
+
+	currentUser := context.Get(currentUserId).(int)
+	if currentUser != userIdInt {
+		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
 
 	updatePostInput := new(model.UpdatePost)

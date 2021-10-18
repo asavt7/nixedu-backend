@@ -52,6 +52,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts")
 		c.SetParamNames("userId")
 		c.SetParamValues(strconv.Itoa(userId))
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.createPost(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
@@ -70,9 +71,28 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts")
 		c.SetParamNames("userId")
 		c.SetParamValues(strconv.Itoa(userId))
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.createPost(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
+		}
+	})
+
+	t.Run("create - not authorized", func(t *testing.T) {
+		postsService.EXPECT().Save(userId, model.Post{}).Times(0).Return(post, nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{"title":"title","body":"body"}`))
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/users/:userId/posts")
+		c.SetParamNames("userId")
+		c.SetParamValues(strconv.Itoa(userId))
+		c.Set(currentUserId, 1111)
+
+		if assert.NoError(t, handler.createPost(c)) {
+			assert.Equal(t, http.StatusUnauthorized, rec.Code)
 		}
 	})
 
@@ -172,6 +192,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(post.Id))
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.updatePost(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
@@ -193,9 +214,31 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(post.Id))
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.updatePost(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
+		}
+	})
+
+	t.Run("update - unauthorized", func(t *testing.T) {
+		postsService.EXPECT().Update(userId, post.Id, model.UpdatePost{
+			Title: &post.Title,
+			Body:  &post.Body,
+		}).Times(0).Return(post, nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{}`))
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/users/:userId/posts/:postId")
+		c.SetParamNames("userId", "postId")
+		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(post.Id))
+		c.Set(currentUserId, 111111)
+
+		if assert.NoError(t, handler.updatePost(c)) {
+			assert.Equal(t, http.StatusUnauthorized, rec.Code)
 		}
 	})
 
@@ -210,9 +253,28 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(post.Id))
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.deletePost(c)) {
 			assert.Equal(t, http.StatusNoContent, rec.Code)
+		}
+	})
+
+	t.Run("delete - unauthorized", func(t *testing.T) {
+		postsService.EXPECT().DeletePost(userId, post.Id).Times(0).Return(nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/users/:userId/posts/:postId")
+		c.SetParamNames("userId", "postId")
+		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(post.Id))
+		c.Set(currentUserId, 111111)
+
+		if assert.NoError(t, handler.deletePost(c)) {
+			assert.Equal(t, http.StatusUnauthorized, rec.Code)
 		}
 	})
 
