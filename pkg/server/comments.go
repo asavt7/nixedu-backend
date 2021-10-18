@@ -1,6 +1,12 @@
 package server
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixEducation/pkg/service"
+	"github.com/labstack/echo/v4"
+	"net/http"
+	"strconv"
+)
 
 // createComment godoc
 // @Tags comments
@@ -19,7 +25,35 @@ import "github.com/labstack/echo/v4"
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) createComment(context echo.Context) error {
-	return nil
+
+	postId := context.Param("postId")
+	postIdInt, err := strconv.Atoi(postId)
+	if err != nil {
+		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
+	}
+
+	newComment := new(model.Comment)
+	if err := context.Bind(newComment); err != nil {
+		return response(http.StatusBadRequest, err.Error(), context)
+	}
+
+	newComment.UserId = context.Get(currentUserId).(int)
+	newComment.PostId = postIdInt
+
+	if err := h.validator.Struct(newComment); err != nil {
+		return response(http.StatusBadRequest, err.Error(), context)
+	}
+
+	post, err := h.service.CommentService.Save(postIdInt, *newComment)
+	if err != nil {
+		switch err.(type) {
+		case service.UserNotFoundErr, service.PostNotFoundErr:
+			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+		default:
+			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+		}
+	}
+	return response(http.StatusCreated, post, context)
 }
 
 // getCommentsByPostId godoc
@@ -38,8 +72,22 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
-	return nil
+	postId := context.Param("postId")
+	postIdInt, err := strconv.Atoi(postId)
+	if err != nil {
+		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
+	}
 
+	post, err := h.service.CommentService.GetAllByPostId(postIdInt)
+	if err != nil {
+		switch err.(type) {
+		case service.UserNotFoundErr, service.PostNotFoundErr:
+			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+		default:
+			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+		}
+	}
+	return response(http.StatusOK, post, context)
 }
 
 // deleteComment godoc
@@ -59,7 +107,26 @@ func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) deleteComment(context echo.Context) error {
-	return nil
+
+	commentId := context.Param("commentId")
+	commentIdInt, err := strconv.Atoi(commentId)
+	if err != nil {
+		return response(http.StatusBadRequest, "missing or incorrect commentId param, expected int", context)
+	}
+
+	currentUser := context.Get(currentUserId).(int)
+
+	if err := h.service.CommentService.Delete(currentUser, commentIdInt); err != nil {
+		switch err.(type) {
+		case service.CommentNotFoundErr:
+			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+		case service.UserHasNoAccessToChangeComment:
+			return response(http.StatusUnauthorized, Message{Message: err.Error()}, context)
+		default:
+			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+		}
+	}
+	return context.NoContent(http.StatusNoContent)
 
 }
 
@@ -81,6 +148,34 @@ func (h *ApiHandler) deleteComment(context echo.Context) error {
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) updateComment(context echo.Context) error {
-	return nil
+
+	commentId := context.Param("commentId")
+	commentIdInt, err := strconv.Atoi(commentId)
+	if err != nil {
+		return response(http.StatusBadRequest, "missing or incorrect commentId param, expected int", context)
+	}
+
+	currentUser := context.Get(currentUserId).(int)
+
+	updateInput := new(model.UpdateComment)
+	if err := context.Bind(updateInput); err != nil {
+		return response(http.StatusBadRequest, err.Error(), context)
+	}
+	if err := h.validator.Struct(updateInput); err != nil {
+		return response(http.StatusBadRequest, err.Error(), context)
+	}
+
+	post, err := h.service.CommentService.Update(currentUser, commentIdInt, *updateInput)
+	if err != nil {
+		switch err.(type) {
+		case service.CommentNotFoundErr:
+			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+		case service.UserHasNoAccessToChangeComment:
+			return response(http.StatusUnauthorized, Message{Message: err.Error()}, context)
+		default:
+			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+		}
+	}
+	return response(http.StatusOK, post, context)
 
 }

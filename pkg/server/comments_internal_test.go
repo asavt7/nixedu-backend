@@ -49,7 +49,12 @@ func TestCommentsHandler(t *testing.T) {
 	handler := NewApiHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
-		commentService.EXPECT().Save(postId, comment).Return(comment, nil)
+		commentService.EXPECT().Save(postId, model.Comment{
+			PostId: postId,
+			Id:     0,
+			UserId: userId,
+			Body:   body,
+		}).Return(comment, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{"body":"`+body+`"}`))
@@ -63,7 +68,6 @@ func TestCommentsHandler(t *testing.T) {
 
 		if assert.NoError(t, handler.createComment(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
-			assert.Equal(t, "/users/1/posts/1/comments/1", rec.Header().Get("Location"))
 			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentJson))
 		}
 	})
@@ -72,7 +76,7 @@ func TestCommentsHandler(t *testing.T) {
 		commentService.EXPECT().Save(postId, comment).Times(0).Return(comment, nil)
 
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{"body":"`+body+`"}`))
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{}`))
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
@@ -161,7 +165,10 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("update - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Times(0).Return(comment, nil)
+		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Return(comment, service.UserHasNoAccessToChangeComment{
+			UserId:    userId,
+			CommentId: commentId,
+		})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(`{"body":"`+body+`"}`))
@@ -171,7 +178,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, 333333)
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)
@@ -197,7 +204,10 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Delete(userId, commentId).Times(0).Return(nil)
+		commentService.EXPECT().Delete(userId, commentId).Return(service.UserHasNoAccessToChangeComment{
+			UserId:    userId,
+			CommentId: commentId,
+		})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", strings.NewReader(`{"body":"`+body+`"}`))
@@ -207,7 +217,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, 3333333)
+		c.Set(currentUserId, userId)
 
 		if assert.NoError(t, handler.deleteComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)

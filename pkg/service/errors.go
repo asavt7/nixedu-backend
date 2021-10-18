@@ -25,3 +25,12 @@ type UserNotFoundErr struct {
 func (err UserNotFoundErr) Error() string {
 	return fmt.Sprintf("user id=%d not found", err.Id)
 }
+
+type UserHasNoAccessToChangeComment struct {
+	UserId    int
+	CommentId int
+}
+
+func (err UserHasNoAccessToChangeComment) Error() string {
+	return fmt.Sprintf("user id=%d cannot change comment id=%d", err.UserId, err.CommentId)
+}
