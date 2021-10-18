@@ -20,6 +20,8 @@ import (
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (h *ApiHandler) getUserPosts(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)
@@ -53,6 +55,8 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 // @Failure 400 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (h *ApiHandler) createPost(context echo.Context) error {
 
 	userId := context.Param("userId")
@@ -100,6 +104,8 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts/{postId} [get]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (h *ApiHandler) getUserPostById(context echo.Context) error {
 
 	userId := context.Param("userId")
@@ -139,6 +145,8 @@ func (h *ApiHandler) getUserPostById(context echo.Context) error {
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts/{postId} [delete]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (h *ApiHandler) deletePost(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)
@@ -182,6 +190,8 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts/{postId} [put]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func (h *ApiHandler) updatePost(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)

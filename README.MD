@@ -3,11 +3,26 @@
 ## Требования 
 - ✅ CRUD для постов и комментов. Ответ от АПИ должен реализовать 2 формата представления данных: XML, JSON.
 - gorm
-- Перепиши реализованное АПИ с использованием echo фреймворка
-- Swagger specification
+- ✅ Перепиши реализованное АПИ с использованием echo фреймворка
+- ✅ Swagger specification
 - ✅ JWT
 - OAuth 2.0
-- Тестирование
+- ✅ Тестирование
+
+## Технологии и библиотеки
+
+- Web framework https://github.com/labstack/echo
+- Валидация https://github.com/go-playground/validator
+
+
+- Кеш для JWT-токенов https://redis.io/
+
+- Миграции БД https://github.com/golang-migrate/migrate
+
+- Документация https://github.com/swaggo/swag
+
+
+- Тестирование json ответа https://github.com/kinbiko/jsonassert
 
 ### run migration
 

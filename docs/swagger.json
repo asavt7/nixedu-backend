@@ -15,6 +15,11 @@
     "paths": {
         "/api/v1/users/{userId}/posts": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get posts by userId",
                 "consumes": [
                     "application/json",
@@ -35,6 +40,13 @@
                         "description": "userId",
                         "name": "userId",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -63,6 +75,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "createPost",
                 "consumes": [
                     "application/json",
@@ -93,6 +110,13 @@
                         "schema": {
                             "$ref": "#/definitions/model.Post"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -125,6 +149,11 @@
         },
         "/api/v1/users/{userId}/posts/{postId}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "getUserPostById",
                 "consumes": [
                     "application/json",
@@ -153,6 +182,13 @@
                         "name": "userId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -177,6 +213,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "updatePost",
                 "consumes": [
                     "application/json",
@@ -214,6 +255,13 @@
                         "schema": {
                             "$ref": "#/definitions/model.UpdatePost"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -238,6 +286,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "deletePost",
                 "consumes": [
                     "application/json",
@@ -265,6 +318,13 @@
                         "description": "postId",
                         "name": "userId",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -510,6 +570,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

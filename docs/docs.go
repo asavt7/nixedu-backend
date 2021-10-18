@@ -29,6 +29,11 @@ var doc = `{
     "paths": {
         "/api/v1/users/{userId}/posts": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get posts by userId",
                 "consumes": [
                     "application/json",
@@ -49,6 +54,13 @@ var doc = `{
                         "description": "userId",
                         "name": "userId",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -77,6 +89,11 @@ var doc = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "createPost",
                 "consumes": [
                     "application/json",
@@ -107,6 +124,13 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.Post"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -139,6 +163,11 @@ var doc = `{
         },
         "/api/v1/users/{userId}/posts/{postId}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "getUserPostById",
                 "consumes": [
                     "application/json",
@@ -167,6 +196,13 @@ var doc = `{
                         "name": "userId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -191,6 +227,11 @@ var doc = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "updatePost",
                 "consumes": [
                     "application/json",
@@ -228,6 +269,13 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.UpdatePost"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -252,6 +300,11 @@ var doc = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "deletePost",
                 "consumes": [
                     "application/json",
@@ -279,6 +332,13 @@ var doc = `{
                         "description": "postId",
                         "name": "userId",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -524,6 +584,13 @@ var doc = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

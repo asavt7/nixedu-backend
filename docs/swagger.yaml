@@ -86,6 +86,11 @@ paths:
         name: userId
         required: true
         type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       - text/xml
@@ -104,6 +109,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/server.Message'
+      security:
+      - ApiKeyAuth: []
       summary: getUserPosts
       tags:
       - posts
@@ -125,6 +132,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/model.Post'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       - text/xml
@@ -145,6 +157,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/server.Message'
+      security:
+      - ApiKeyAuth: []
       summary: createPost
       tags:
       - posts
@@ -166,6 +180,11 @@ paths:
         name: userId
         required: true
         type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       - text/xml
@@ -182,6 +201,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/server.Message'
+      security:
+      - ApiKeyAuth: []
       summary: deletePost
       tags:
       - posts
@@ -202,6 +223,11 @@ paths:
         name: userId
         required: true
         type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       - text/xml
@@ -218,6 +244,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/server.Message'
+      security:
+      - ApiKeyAuth: []
       summary: getUserPostById
       tags:
       - posts
@@ -244,6 +272,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/model.UpdatePost'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       - text/xml
@@ -260,6 +293,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/server.Message'
+      security:
+      - ApiKeyAuth: []
       summary: updatePost
       tags:
       - posts
@@ -345,4 +380,9 @@ paths:
       summary: signUp
       tags:
       - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
