@@ -49,12 +49,11 @@ func (srv *ApiServer) InitRoutes() {
 	usersApi.DELETE("/posts/:postId", srv.handler.deletePost)
 	usersApi.PUT("/posts/:postId", srv.handler.updatePost)
 
-	usersApi.GET("/posts/:postId/comments", srv.handler.getComments)
+	usersApi.GET("/posts/:postId/comments", srv.handler.getCommentsByPostId)
 	usersApi.POST("/posts/:postId/comments", srv.handler.createComment)
 
-	usersApi.GET("/posts/:postId/comments/:commentId", srv.handler.getCommentById)
 	usersApi.DELETE("/posts/:postId/comments/:commentId", srv.handler.deleteComment)
-	usersApi.PUT("/posts/:postId/comments/:commentId", srv.handler.changeComment)
+	usersApi.PUT("/posts/:postId/comments/:commentId", srv.handler.updateComment)
 
 }
 

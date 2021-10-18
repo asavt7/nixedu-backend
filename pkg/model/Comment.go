@@ -1,13 +1,12 @@
 package model
 
 type Comment struct {
-	PostId int    `json:"postId" xml:"postId"`
+	PostId int    `json:"postId" xml:"postId" validate:"required"`
 	Id     int    `json:"id" xml:"id"`
-	Name   string `json:"name" xml:"name"`
-	Email  string `json:"email" xml:"email"`
-	Body   string `json:"body" xml:"body"`
+	UserId int    `json:"userId" xml:"userId" validate:"required"`
+	Body   string `json:"body" xml:"body" validate:"required"`
 }
 
 type UpdateComment struct {
-	Body *string `json:"body" xml:"body"`
+	Body *string `json:"body" xml:"body" validate:"required"`
 }

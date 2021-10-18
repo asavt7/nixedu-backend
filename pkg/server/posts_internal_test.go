@@ -246,7 +246,7 @@ func TestPostsHandler(t *testing.T) {
 		postsService.EXPECT().DeletePost(userId, post.Id).Return(nil)
 
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
@@ -264,7 +264,7 @@ func TestPostsHandler(t *testing.T) {
 		postsService.EXPECT().DeletePost(userId, post.Id).Times(0).Return(nil)
 
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)

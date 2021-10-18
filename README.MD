@@ -14,14 +14,14 @@
 - Web framework https://github.com/labstack/echo
 - Валидация https://github.com/go-playground/validator
 
-
+- JWT https://jwt.io/
 - Кеш для JWT-токенов https://redis.io/
 
 - Миграции БД https://github.com/golang-migrate/migrate
 
 - Документация https://github.com/swaggo/swag
 
-
+- Mock-generator https://github.com/golang/mock
 - Тестирование json ответа https://github.com/kinbiko/jsonassert
 
 ### run migration
