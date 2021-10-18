@@ -50,5 +50,8 @@ migrate-down:
 docker-compose:
 	docker-compose up db redis
 
+.PHONY: swagger
+swagger:
+	swag init  --dir ./cmd,./pkg --parseInternal true
 
 .DEFAULT_GOAL := build

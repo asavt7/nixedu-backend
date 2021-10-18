@@ -8,6 +8,18 @@ import (
 	"strconv"
 )
 
+// getUserPosts godoc
+// @Tags posts
+// @Summary getUserPosts
+// @Description get posts by userId
+// @ID getUserPosts
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param userId path int true "userId"
+// @Success 200 {object} []model.Post
+// @Failure 404 {object} Message
+// @Failure 500 {object} Message
+// @Router /api/v1/users/{userId}/posts [get]
 func (h *ApiHandler) getUserPosts(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)
@@ -27,6 +39,19 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 	return response(http.StatusOK, posts, context)
 }
 
+// createPost godoc
+// @Tags posts
+// @Summary createPost
+// @Description createPost
+// @ID createPost
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param userId path int true "userId"
+// @Success 200 {object} model.Post
+// @Header 200 {string} Location "/api/v1/users/{userId}/posts/{postId}"
+// @Failure 400 {object} Message
+// @Failure 500 {object} Message
+// @Router /api/v1/users/{userId}/posts [post]
 func (h *ApiHandler) createPost(context echo.Context) error {
 
 	userId := context.Param("userId")
@@ -61,6 +86,19 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 
 }
 
+// getUserPostById godoc
+// @Tags posts
+// @Summary getUserPostById
+// @Description getUserPostById
+// @ID getUserPostById
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param userId path int true "userId"
+// @Param userId path int true "postId"
+// @Success 200 {object} model.Post
+// @Failure 404 {object} Message
+// @Failure 500 {object} Message
+// @Router /api/v1/users/{userId}/posts/{postId} [get]
 func (h *ApiHandler) getUserPostById(context echo.Context) error {
 
 	userId := context.Param("userId")
@@ -87,6 +125,19 @@ func (h *ApiHandler) getUserPostById(context echo.Context) error {
 
 }
 
+// deletePost godoc
+// @Tags posts
+// @Summary deletePost
+// @Description deletePost
+// @ID deletePost
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param userId path int true "userId"
+// @Param userId path int true "postId"
+// @Success 200 {object} model.Post
+// @Failure 404 {object} Message
+// @Failure 500 {object} Message
+// @Router /api/v1/users/{userId}/posts/{postId} [delete]
 func (h *ApiHandler) deletePost(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)
@@ -116,6 +167,19 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 
 }
 
+// updatePost godoc
+// @Tags posts
+// @Summary updatePost
+// @Description updatePost
+// @ID updatePost
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param userId path int true "userId"
+// @Param userId path int true "postId"
+// @Success 200 {object} model.UpdatePost
+// @Failure 404 {object} Message
+// @Failure 500 {object} Message
+// @Router /api/v1/users/{userId}/posts/{postId} [put]
 func (h *ApiHandler) updatePost(context echo.Context) error {
 	userId := context.Param("userId")
 	userIdInt, err := strconv.Atoi(userId)

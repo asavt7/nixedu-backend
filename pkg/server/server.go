@@ -1,8 +1,10 @@
 package server
 
 import (
+	_ "github.com/asavt7/nixEducation/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 const ApiPath = "/api/v1"
@@ -27,12 +29,12 @@ func (srv *ApiServer) InitRoutes() {
 	}))
 	srv.Echo.Use(middleware.Recover())
 
+	srv.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	srv.Echo.POST("/sign-in", srv.handler.signIn)
 	srv.Echo.POST("/sign-up", srv.handler.signUp)
 
-	srv.Echo.GET("/health", func(context echo.Context) error {
-		return context.NoContent(200)
-	})
+	srv.Echo.GET("/health", healthCheck)
 
 	api := srv.Echo.Group(ApiPath)
 

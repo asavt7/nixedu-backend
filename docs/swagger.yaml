@@ -1,0 +1,236 @@
+basePath: /api/v1
+definitions:
+  model.Post:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      userId:
+        type: integer
+    required:
+    - body
+    - title
+    type: object
+  model.UpdatePost:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  server.Message:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a backend for nix tasks https://education.nixsolutions.com/mod/page/view.php?id=79
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: NIX_EDU_APP
+  version: "1.0"
+paths:
+  /api/v1/users/{userId}/posts:
+    get:
+      consumes:
+      - application/json
+      - text/xml
+      description: get posts by userId
+      operationId: getUserPosts
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: getUserPosts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: createPost
+      operationId: createPost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          headers:
+            Location:
+              description: /api/v1/users/{userId}/posts/{postId}
+              type: string
+          schema:
+            $ref: '#/definitions/model.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: createPost
+      tags:
+      - posts
+  /api/v1/users/{userId}/posts/{postId}:
+    delete:
+      consumes:
+      - application/json
+      - text/xml
+      description: deletePost
+      operationId: deletePost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Post'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: deletePost
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      - text/xml
+      description: getUserPostById
+      operationId: getUserPostById
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Post'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: getUserPostById
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      - text/xml
+      description: updatePost
+      operationId: updatePost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UpdatePost'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: updatePost
+      tags:
+      - posts
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - healthcheck
+swagger: "2.0"
