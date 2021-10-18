@@ -10,6 +10,10 @@ import (
 type PostService interface {
 	GetAll() ([]model.Post, error)
 	GetAllByUserId(userId int) ([]model.Post, error)
+	GetByUserIdAndPostId(userId, postId int) (model.Post, error)
+	Save(userId int, post model.Post) (model.Post, error)
+	Update(userId, postId int, updatePost model.UpdatePost) (model.Post, error)
+	DeletePost(userId, postId int) error
 }
 
 type CommentService interface {

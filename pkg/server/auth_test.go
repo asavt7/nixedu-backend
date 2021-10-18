@@ -1,10 +1,11 @@
-package server
+package server_test
 
 import (
 	"encoding/xml"
 	"errors"
 	mock_service "github.com/asavt7/nixEducation/mocks/pkg/service"
 	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixEducation/pkg/server"
 	"github.com/asavt7/nixEducation/pkg/service"
 	"github.com/golang/mock/gomock"
 	"github.com/kinbiko/jsonassert"
@@ -89,7 +90,7 @@ func TestSignUp(t *testing.T) {
 		CommentService:       nil,
 	}
 
-	srv := NewApiServer(NewApiHandler(mockService))
+	srv := server.NewApiServer(server.NewApiHandler(mockService))
 	defer srv.Echo.Close()
 
 	t.Run("signUp ok", func(t *testing.T) {
@@ -172,7 +173,7 @@ func TestSignIn(t *testing.T) {
 		CommentService:       nil,
 	}
 
-	srv := NewApiServer(NewApiHandler(mockService))
+	srv := server.NewApiServer(server.NewApiHandler(mockService))
 	defer srv.Echo.Close()
 
 	userId := 1

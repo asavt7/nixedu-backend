@@ -5,6 +5,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+const ApiPath = "/api/v1"
+
 type ApiServer struct {
 	Echo    *echo.Echo
 	handler *ApiHandler
@@ -28,13 +30,13 @@ func (srv *ApiServer) InitRoutes() {
 	srv.Echo.POST("/sign-in", srv.handler.signIn)
 	srv.Echo.POST("/sign-up", srv.handler.signUp)
 
-	api := srv.Echo.Group("/api/v1")
-
-	api.Use(parseAccessToken(), srv.handler.TokenRefresherMiddleware)
-
-	api.GET("/health", func(context echo.Context) error {
+	srv.Echo.GET("/health", func(context echo.Context) error {
 		return context.NoContent(200)
 	})
+
+	api := srv.Echo.Group(ApiPath)
+
+	api.Use(parseAccessToken(), srv.handler.TokenRefresherMiddleware)
 
 	usersApi := api.Group("/users/:userId")
 
@@ -43,7 +45,7 @@ func (srv *ApiServer) InitRoutes() {
 
 	usersApi.GET("/posts/:postId", srv.handler.getUserPostById)
 	usersApi.DELETE("/posts/:postId", srv.handler.deletePost)
-	usersApi.PUT("/posts/:postId", srv.handler.changePost)
+	usersApi.PUT("/posts/:postId", srv.handler.updatePost)
 
 	usersApi.GET("/posts/:postId/comments", srv.handler.getComments)
 	usersApi.POST("/posts/:postId/comments", srv.handler.createComment)

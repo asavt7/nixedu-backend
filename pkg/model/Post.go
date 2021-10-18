@@ -3,13 +3,13 @@ package model
 type Post struct {
 	UserId int    `json:"userId" xml:"userId"`
 	Id     int    `json:"id" xml:"id"`
-	Title  string `json:"title" xml:"title"`
-	Body   string `json:"body" xml:"body"`
+	Title  string `json:"title" xml:"title" validate:"required"`
+	Body   string `json:"body" xml:"body" validate:"required"`
 }
 
 type UpdatePost struct {
-	Title *string `json:"title" xml:"title"`
-	Body  *string `json:"body" xml:"body"`
+	Title *string `json:"title" xml:"title" validate:"required"`
+	Body  *string `json:"body" xml:"body" validate:"required"`
 }
 
 type Album struct {

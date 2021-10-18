@@ -4,7 +4,6 @@ import (
 	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -56,7 +55,7 @@ func (h *ApiHandler) setTokenCookie(name, token string, expiration time.Time, c 
 	cookie.Name = name
 	cookie.Value = token
 	cookie.Expires = expiration
-	cookie.Path = "/"
+	cookie.Path = ApiPath
 	// Http-only helps mitigate the risk of client side script accessing the protected cookie.
 	cookie.HttpOnly = true
 
@@ -88,20 +87,4 @@ func (h *ApiHandler) signUp(c echo.Context) error {
 	}
 
 	return response(http.StatusCreated, createdUser, c)
-}
-
-func response(status int, body interface{}, c echo.Context) error {
-	ctype := c.Request().Header.Get(echo.HeaderContentType)
-	acceptType := c.Request().Header.Get(echo.HeaderAccept)
-	if len(acceptType) == 0 {
-		acceptType = ctype
-	}
-	switch {
-	case strings.Contains(acceptType, echo.MIMEApplicationJSON):
-		return c.JSON(status, body)
-	case strings.Contains(acceptType, echo.MIMEApplicationXML), strings.Contains(acceptType, echo.MIMETextXML):
-		return c.XML(status, body)
-	default:
-		return c.JSON(status, body)
-	}
 }
