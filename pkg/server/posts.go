@@ -47,8 +47,9 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 // @Accept  json,xml
 // @Produce  json,xml
 // @Param userId path int true "userId"
-// @Success 200 {object} model.Post
-// @Header 200 {string} Location "/api/v1/users/{userId}/posts/{postId}"
+// @Param post body model.Post true "post"
+// @Success 201 {object} model.Post
+// @Header 201 {string} Location "/api/v1/users/{userId}/posts/{postId}"
 // @Failure 400 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts [post]
@@ -134,7 +135,7 @@ func (h *ApiHandler) getUserPostById(context echo.Context) error {
 // @Produce  json,xml
 // @Param userId path int true "userId"
 // @Param userId path int true "postId"
-// @Success 200 {object} model.Post
+// @Success 204 {object} model.Post
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts/{postId} [delete]
@@ -176,7 +177,8 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 // @Produce  json,xml
 // @Param userId path int true "userId"
 // @Param userId path int true "postId"
-// @Success 200 {object} model.UpdatePost
+// @Param post body model.UpdatePost true "post"
+// @Success 200 {object} model.Post
 // @Failure 404 {object} Message
 // @Failure 500 {object} Message
 // @Router /api/v1/users/{userId}/posts/{postId} [put]

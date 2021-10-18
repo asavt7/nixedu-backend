@@ -16,6 +16,23 @@ type signInUserInput struct {
 	Username string `json:"username" xml:"username"`
 }
 
+type signInResponse struct {
+	AccessToken  string `json:"access-token" xml:"access-token"`
+	RefreshToken string `json:"refresh-token" xml:"refresh-token"`
+}
+
+// signIn godoc
+// @Tags auth
+// @Summary signIn
+// @Description signIn and get access and refresh tokens
+// @ID signIn
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param signInUserInput body signInUserInput true "body"
+// @Success 200 {object} signInResponse
+// @Failure 400 {object} Message
+// @Failure 500 {object} Message
+// @Router /sign-in [post]
 func (h *ApiHandler) signIn(c echo.Context) error {
 	u := new(signInUserInput)
 	if err := c.Bind(u); err != nil {
@@ -32,9 +49,9 @@ func (h *ApiHandler) signIn(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Token is incorrect")
 	}
 
-	return response(http.StatusOK, map[string]string{
-		"access-token":  accessToken,
-		"refresh-token": refreshToken,
+	return response(http.StatusOK, signInResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}, c)
 }
 
@@ -76,6 +93,18 @@ type signUpUserInput struct {
 	model.User
 }
 
+// signUp godoc
+// @Tags auth
+// @Summary signUp
+// @Description signUp new user
+// @ID signUp
+// @Accept  json,xml
+// @Produce  json,xml
+// @Param signUpUserInput body signUpUserInput true "a body"
+// @Success 200 {object} model.User
+// @Failure 400 {object} Message
+// @Failure 500 {object} Message
+// @Router /sign-up [post]
 func (h *ApiHandler) signUp(c echo.Context) error {
 	u := new(signUpUserInput)
 	if err := c.Bind(u); err != nil {

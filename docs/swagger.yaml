@@ -24,9 +24,43 @@ definitions:
     - body
     - title
     type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
   server.Message:
     properties:
       message:
+        type: string
+    type: object
+  server.signInResponse:
+    properties:
+      access-token:
+        type: string
+      refresh-token:
+        type: string
+    type: object
+  server.signInUserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  server.signUpUserInput:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      username:
         type: string
     type: object
 host: localhost:8080
@@ -85,12 +119,18 @@ paths:
         name: userId
         required: true
         type: integer
+      - description: post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/model.Post'
       produces:
       - application/json
       - text/xml
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           headers:
             Location:
               description: /api/v1/users/{userId}/posts/{postId}
@@ -130,8 +170,8 @@ paths:
       - application/json
       - text/xml
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
           schema:
             $ref: '#/definitions/model.Post'
         "404":
@@ -198,6 +238,12 @@ paths:
         name: userId
         required: true
         type: integer
+      - description: post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePost'
       produces:
       - application/json
       - text/xml
@@ -205,7 +251,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.UpdatePost'
+            $ref: '#/definitions/model.Post'
         "404":
           description: Not Found
           schema:
@@ -233,4 +279,70 @@ paths:
       summary: Show the status of server.
       tags:
       - healthcheck
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: signIn and get access and refresh tokens
+      operationId: signIn
+      parameters:
+      - description: body
+        in: body
+        name: signInUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/server.signInUserInput'
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.signInResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: signIn
+      tags:
+      - auth
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: signUp new user
+      operationId: signUp
+      parameters:
+      - description: a body
+        in: body
+        name: signUpUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/server.signUpUserInput'
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.Message'
+      summary: signUp
+      tags:
+      - auth
 swagger: "2.0"
