@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/xml"
 	"errors"
 	mock_service "github.com/asavt7/nixEducation/mocks/pkg/service"
 	"github.com/asavt7/nixEducation/pkg/model"
@@ -11,7 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -21,6 +21,7 @@ const (
 	username         = "Bret"
 	email            = "Sincere@april.biz"
 	createduserId    = "15"
+	createduserIdInt = 15
 	password         = "password"
 	createUserRqBody = `{
     "id": 1,
@@ -47,6 +48,32 @@ const (
     }
   }`
 	createUserRsBodyExpected = `{"id": ` + createduserId + `,"username": "` + username + `", "email": "` + email + `"}`
+
+	createUserRqBodyXml = `<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <address>
+      <city>Gwenborough</city>
+      <geo>
+         <lat>-37.3159</lat>
+         <lng>81.1496</lng>
+      </geo>
+      <street>Kulas Light</street>
+      <suite>Apt. 556</suite>
+      <zipcode>92998-3874</zipcode>
+   </address>
+   <company>
+      <bs>harness real-time e-markets</bs>
+      <catchPhrase>Multi-layered client-server neural-net</catchPhrase>
+      <name>Romaguera-Crona</name>
+   </company>
+   <email>` + email + `</email>
+   <id>1</id>
+   <name>Leanne Graham</name>
+   <password>` + password + `</password>
+   <phone>1-770-736-8031 x56442</phone>
+   <username>` + username + `</username>
+   <website>hildegard.org</website>
+</root>`
 )
 
 func TestSignUp(t *testing.T) {
@@ -66,7 +93,6 @@ func TestSignUp(t *testing.T) {
 	defer srv.Echo.Close()
 
 	t.Run("signUp ok", func(t *testing.T) {
-		createduserIdInt, _ := strconv.Atoi(createduserId)
 		createdUser := model.User{
 			Id:           createduserIdInt,
 			Username:     username,
@@ -90,6 +116,45 @@ func TestSignUp(t *testing.T) {
 
 		assertJsonResponse(t, createUserRsBodyExpected, rec.Body.String())
 	})
+
+	t.Run("signUp ok", func(t *testing.T) {
+		createdUser := model.User{
+			Id:           createduserIdInt,
+			Username:     username,
+			Email:        email,
+			PasswordHash: "hash",
+		}
+		userService.EXPECT().CreateUser(model.User{
+			Id:           1,
+			Username:     username,
+			Email:        email,
+			PasswordHash: "",
+		}, password).Return(createdUser, nil)
+
+		req := httptest.NewRequest(echo.POST, "/sign-up", strings.NewReader(createUserRqBodyXml))
+		req.Header.Set("Content-Type", "application/xml")
+		rec := httptest.NewRecorder()
+
+		srv.Echo.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusCreated, rec.Code)
+
+		assertXmlResponseSignUp(t, rec.Body.String())
+
+	})
+
+}
+
+func assertXmlResponseSignUp(t *testing.T, s string) {
+	u := &model.User{}
+
+	err := xml.Unmarshal([]byte(s), u)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, username, u.Username)
+	assert.Equal(t, email, u.Email)
+	assert.Equal(t, createduserIdInt, u.Id)
 
 }
 

@@ -4,6 +4,7 @@ import (
 	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -12,8 +13,8 @@ const accessTokenCookieName = "access-token"
 const currentUserId = "currentUserId"
 
 type signInUserInput struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
+	Password string `json:"password" xml:"password"`
+	Username string `json:"username" xml:"username"`
 }
 
 func (h *ApiHandler) signIn(c echo.Context) error {
@@ -32,10 +33,10 @@ func (h *ApiHandler) signIn(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Token is incorrect")
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
+	return response(http.StatusOK, map[string]string{
 		"access-token":  accessToken,
 		"refresh-token": refreshToken,
-	})
+	}, c)
 }
 
 func (h *ApiHandler) generateTokensAndSetCookies(userId int, c echo.Context) (accessToken, refreshToken string, err error) {
@@ -72,7 +73,7 @@ func (h *ApiHandler) setUserCookie(userId string, expiration time.Time, c echo.C
 }
 
 type signUpUserInput struct {
-	Password string `json:"password"`
+	Password string `json:"password" xml:"password"`
 	model.User
 }
 
@@ -85,5 +86,22 @@ func (h *ApiHandler) signUp(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusCreated, createdUser)
+
+	return response(http.StatusCreated, createdUser, c)
+}
+
+func response(status int, body interface{}, c echo.Context) error {
+	ctype := c.Request().Header.Get(echo.HeaderContentType)
+	acceptType := c.Request().Header.Get(echo.HeaderAccept)
+	if len(acceptType) == 0 {
+		acceptType = ctype
+	}
+	switch {
+	case strings.Contains(acceptType, echo.MIMEApplicationJSON):
+		return c.JSON(status, body)
+	case strings.Contains(acceptType, echo.MIMEApplicationXML), strings.Contains(acceptType, echo.MIMETextXML):
+		return c.XML(status, body)
+	default:
+		return c.JSON(status, body)
+	}
 }

@@ -1,34 +1,34 @@
 package model
 
 type Post struct {
-	UserId int    `json:"userId"`
-	Id     int    `json:"id"`
-	Title  string `json:"title"`
-	Body   string `json:"body"`
+	UserId int    `json:"userId" xml:"userId"`
+	Id     int    `json:"id" xml:"id"`
+	Title  string `json:"title" xml:"title"`
+	Body   string `json:"body" xml:"body"`
 }
 
 type UpdatePost struct {
-	Title *string `json:"title"`
-	Body  *string `json:"body"`
+	Title *string `json:"title" xml:"title"`
+	Body  *string `json:"body" xml:"body"`
 }
 
 type Album struct {
-	UserId int    `json:"userId"`
-	Id     int    `json:"id"`
-	Title  string `json:"title"`
+	UserId int    `json:"userId" xml:"userId"`
+	Id     int    `json:"id" xml:"id"`
+	Title  string `json:"title" xml:"title"`
 }
 
 type Photo struct {
-	AlbumId      int    `json:"albumId"`
-	Id           int    `json:"id"`
-	Title        string `json:"title"`
-	Url          string `json:"url"`
-	ThumbnailUrl string `json:"thumbnailUrl"`
+	AlbumId      int    `json:"albumId" xml:"albumId"`
+	Id           int    `json:"id" xml:"id"`
+	Title        string `json:"title" xml:"title"`
+	Url          string `json:"url" xml:"url"`
+	ThumbnailUrl string `json:"thumbnailUrl" xml:"thumbnailUrl"`
 }
 
 type Todo struct {
-	UserId    int    `json:"userId"`
-	Id        int    `json:"id"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
+	UserId    int    `json:"userId" xml:"userId"`
+	Id        int    `json:"id" xml:"id"`
+	Title     string `json:"title" xml:"title"`
+	Completed bool   `json:"completed" xml:"completed"`
 }
