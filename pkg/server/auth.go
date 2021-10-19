@@ -12,8 +12,8 @@ const accessTokenCookieName = "access-token"
 const currentUserId = "currentUserId"
 
 type signInUserInput struct {
-	Password string `json:"password" xml:"password"`
-	Username string `json:"username" xml:"username"`
+	Password string `json:"password" xml:"password" validate:"required"`
+	Username string `json:"username" xml:"username" validate:"required"`
 }
 
 type signInResponse struct {
@@ -36,6 +36,16 @@ type signInResponse struct {
 func (h *ApiHandler) signIn(c echo.Context) error {
 	u := new(signInUserInput)
 	if err := c.Bind(u); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if len(u.Password) == 0 || len(u.Username) == 0 {
+		u.Username = c.FormValue("username")
+		u.Password = c.FormValue("password")
+	}
+
+	err := h.validator.Struct(u)
+	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -89,7 +99,7 @@ func (h *ApiHandler) setUserCookie(userId string, expiration time.Time, c echo.C
 }
 
 type signUpUserInput struct {
-	Password string `json:"password" xml:"password"`
+	Password string `json:"password" xml:"password" validate:"required"`
 	model.User
 }
 
@@ -116,4 +126,22 @@ func (h *ApiHandler) signUp(c echo.Context) error {
 	}
 
 	return response(http.StatusCreated, createdUser, c)
+}
+
+func (h *ApiHandler) loginPage(context echo.Context) error {
+	var htmlLoginForm = `<html>
+<body>
+<center> <h1> Login Form </h1> </center>   
+    <form action="/sign-in" method="post">
+		  <label for="username">Username:</label>
+		  <input type="text" id="username" name="username"><br><br>
+		  <label for="password">Password:</label>
+		  <input type="password" id="password" name="password"><br><br>
+		  <input type="submit" value="Submit">
+	</form>
+
+	<a href="/oauth/google/login">Google Log In</a>
+</body>
+</html>`
+	return context.HTML(200, htmlLoginForm)
 }

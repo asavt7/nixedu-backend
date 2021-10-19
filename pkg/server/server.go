@@ -29,6 +29,10 @@ func (srv *ApiServer) InitRoutes() {
 	}))
 	srv.Echo.Use(middleware.Recover())
 
+	srv.Echo.GET("/login", srv.handler.loginPage)
+	srv.Echo.GET("/oauth/google/login", srv.handler.handleGoogleLogin)
+	srv.Echo.GET("/oauth/google/callback", srv.handler.handleGoogleCallback)
+
 	srv.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	srv.Echo.POST("/sign-in", srv.handler.signIn)
