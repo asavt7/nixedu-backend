@@ -17,6 +17,8 @@ const (
 	refreshTime         = 15 * time.Minute
 	accessTokenTTL      = 1 * time.Hour
 	refreshTokenTTL     = 12 * time.Hour
+
+	salt = "some_salt_from_configs" //todo
 )
 
 func GetRefreshJWTSecret() string {
@@ -70,11 +72,11 @@ func (s *AuthorizationServiceImpl) validateToken(accessTokenClaims *Claims, toke
 }
 
 func (s *AuthorizationServiceImpl) CheckUserCredentials(username string, password string) (model.User, error) {
-	user, err := s.repo.GetByUsername(username)
+	user, err := s.repo.FindByUsername(username)
 	if err != nil {
 		return user, err
 	}
-	err = checkPassword(user, password)
+	err = checkPassword(user.PasswordHash, password)
 	return user, err
 }
 
@@ -82,8 +84,8 @@ func (s *AuthorizationServiceImpl) IsNeedToRefresh(claims *Claims) bool {
 	return time.Unix(claims.ExpiresAt, 0).Sub(time.Now()) < refreshTime
 }
 
-func checkPassword(user model.User, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+func checkPassword(passwordHash string, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 }
 
 func (s *AuthorizationServiceImpl) ParseAccessTokenToClaims(token string) (*Claims, error) {

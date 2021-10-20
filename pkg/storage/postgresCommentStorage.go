@@ -1,12 +1,12 @@
 package storage
 
 import (
-	"database/sql"
 	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/jmoiron/sqlx"
 )
 
 type PostgresCommentsStorage struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 func (p *PostgresCommentsStorage) GetAllByUserId(userId int) ([]model.Comment, error) {

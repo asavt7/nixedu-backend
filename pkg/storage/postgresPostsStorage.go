@@ -1,12 +1,12 @@
 package storage
 
 import (
-	"database/sql"
 	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/jmoiron/sqlx"
 )
 
 type PostgresPostsStorage struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 func (p *PostgresPostsStorage) SaveAll(userId int, posts []model.Post) ([]model.Post, error) {

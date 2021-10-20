@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// InitGoogleOAuthConfigs read configs from envs\config files and returns *oauth2.Config for Google
 func InitGoogleOAuthConfigs() *oauth2.Config {
 	return &oauth2.Config{
 		RedirectURL:  "http://localhost:8080/oauth/google/callback",

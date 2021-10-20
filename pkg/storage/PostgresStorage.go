@@ -1,18 +1,22 @@
 package storage
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
+const (
+	usersTable = "nix.users"
+)
+
 type PostgresStorage struct {
-	db *sql.DB
+	db *sqlx.DB
 	PostsStorage
 	CommentsStorage
 	UserStorage
 }
 
-func NewPostgresStorage(db *sql.DB) *Storage {
+func NewPostgresStorage(db *sqlx.DB) *Storage {
 
 	return &Storage{
 		PostsStorage:    &PostgresPostsStorage{db: db},

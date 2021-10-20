@@ -110,7 +110,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("get all comments by postId - user not found", func(t *testing.T) {
-		commentService.EXPECT().GetAllByPostId(postId).Return(comments, service.UserNotFoundErr{Id: userId})
+		commentService.EXPECT().GetAllByPostId(postId).Return(comments, model.UserNotFoundErr{Id: userId})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -165,7 +165,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("update - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Return(comment, service.UserHasNoAccessToChangeComment{
+		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Return(comment, model.UserHasNoAccessToChangeComment{
 			UserId:    userId,
 			CommentId: commentId,
 		})
@@ -204,7 +204,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Delete(userId, commentId).Return(service.UserHasNoAccessToChangeComment{
+		commentService.EXPECT().Delete(userId, commentId).Return(model.UserHasNoAccessToChangeComment{
 			UserId:    userId,
 			CommentId: commentId,
 		})

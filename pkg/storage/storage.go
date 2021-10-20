@@ -29,7 +29,8 @@ type UserStorage interface {
 	GetByUsernameAndPasswordHash(username, passwordHash string) (model.User, error)
 	Create(user model.User) (model.User, error)
 	GetById(userId int) (model.User, error)
-	GetByUsername(username string) (model.User, error)
+	FindByUsername(username string) (model.User, error)
+	FindByEmail(email string) (model.User, error)
 }
 
 type Storage struct {

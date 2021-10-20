@@ -120,9 +120,15 @@ func (h *ApiHandler) signUp(c echo.Context) error {
 	if err := c.Bind(u); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	err := h.validator.Struct(u)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	createdUser, err := h.service.UserService.CreateUser(u.User, u.Password)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return response(http.StatusCreated, createdUser, c)

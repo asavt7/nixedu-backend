@@ -6,14 +6,17 @@ import (
 	"time"
 )
 
+// TokenStorage struct
 type TokenStorage struct {
 	TokenKeeper
 }
 
+// NewTokenStorage construct new TokenStorage instance
 func NewTokenStorage(client *redis.Client, autoLogoffMinutes time.Duration) *TokenStorage {
 	return &TokenStorage{TokenKeeper: NewRedisTokenStore(client, autoLogoffMinutes)}
 }
 
+// TokenKeeper interface provides methods for storing model.CachedTokens in cache
 type TokenKeeper interface {
 	Get(userId int) (model.CachedTokens, error)
 	Delete(userId int) error

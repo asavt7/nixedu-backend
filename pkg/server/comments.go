@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/service"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -47,7 +46,7 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 	post, err := h.service.CommentService.Save(postIdInt, *newComment)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -81,7 +80,7 @@ func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
 	post, err := h.service.CommentService.GetAllByPostId(postIdInt)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -118,9 +117,9 @@ func (h *ApiHandler) deleteComment(context echo.Context) error {
 
 	if err := h.service.CommentService.Delete(currentUser, commentIdInt); err != nil {
 		switch err.(type) {
-		case service.CommentNotFoundErr:
+		case model.CommentNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
-		case service.UserHasNoAccessToChangeComment:
+		case model.UserHasNoAccessToChangeComment:
 			return response(http.StatusUnauthorized, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -168,9 +167,9 @@ func (h *ApiHandler) updateComment(context echo.Context) error {
 	post, err := h.service.CommentService.Update(currentUser, commentIdInt, *updateInput)
 	if err != nil {
 		switch err.(type) {
-		case service.CommentNotFoundErr:
+		case model.CommentNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
-		case service.UserHasNoAccessToChangeComment:
+		case model.UserHasNoAccessToChangeComment:
 			return response(http.StatusUnauthorized, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)

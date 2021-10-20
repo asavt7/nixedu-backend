@@ -2,11 +2,11 @@ package server
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/asavt7/nixEducation/pkg/configs"
 	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/service"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/oauth2"
@@ -43,7 +43,7 @@ func (h *ApiHandler) handleGoogleCallback(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	gotUser, err := h.getUserByEmailOrCreateIfNotExists(googleUser.Email, googleUser.Name)
+	gotUser, err := h.getUserByEmailOrCreateIfNotExists(googleUser.Email, generateUniqUsername(googleUser.Email, googleUser.Name))
 	if err != nil {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -56,20 +56,30 @@ func (h *ApiHandler) handleGoogleCallback(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, "/swagger/")
 }
 
+// generate uniq username depends on gmail email (guaranteed unique email)
+func generateUniqUsername(email string, name string) string {
+	return name + "_" + base64.URLEncoding.EncodeToString([]byte(email))
+}
+
 func (h *ApiHandler) getUserByEmailOrCreateIfNotExists(email, username string) (model.User, error) {
 	u, err := h.service.UserService.GetUserByEmail(email)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr:
+		// todo create user and send to email login and temporary password
+		case model.UserNotFoundErr:
 			return h.service.UserService.CreateUser(model.User{
 				Username: email,
 				Email:    username,
-			}, "")
+			}, generatePassword())
 		default:
 			return model.User{}, err
 		}
 	}
 	return u, nil
+}
+
+func generatePassword() string {
+	return uuid.NewString()
 }
 
 func getUserInfo(state string, code string) ([]byte, error) {

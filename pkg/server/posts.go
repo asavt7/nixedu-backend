@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/service"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -32,7 +31,7 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 	posts, err := h.service.PostService.GetAllByUserId(userIdInt)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr:
+		case model.UserNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -81,7 +80,7 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 	post, err := h.service.PostService.Save(userIdInt, *newPost)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -122,7 +121,7 @@ func (h *ApiHandler) getUserPostById(context echo.Context) error {
 	post, err := h.service.PostService.GetByUserIdAndPostId(userIdInt, postIdInt)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -166,7 +165,7 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 
 	if err := h.service.PostService.DeletePost(userIdInt, postIdInt); err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
@@ -220,7 +219,7 @@ func (h *ApiHandler) updatePost(context echo.Context) error {
 	post, err := h.service.PostService.Update(userIdInt, postIdInt, *updatePostInput)
 	if err != nil {
 		switch err.(type) {
-		case service.UserNotFoundErr, service.PostNotFoundErr:
+		case model.UserNotFoundErr, model.PostNotFoundErr:
 			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
 		default:
 			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
