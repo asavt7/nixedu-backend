@@ -40,6 +40,10 @@ test: mocks
 migrate-up:
 	migrate -path ./migrations/ -database 'postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}' up
 
+## linter - run linter for go code
+.PHONY: linter
+linter:
+	revive -config .linter.config.toml -formatter unix ./...
 
 .PHONY: migrate-down
 migrate-down:

@@ -1,6 +1,7 @@
 # Решение тасок курса https://education.nixsolutions.com/course/view.php?id=12
 
 ## Требования 
+- ✅ настроить golint в Goland IDE (используем https://github.com/mgechev/revive, т.к. https://github.com/golang/go/issues/38968)
 - ✅ CRUD для постов и комментов. Ответ от АПИ должен реализовать 2 формата представления данных: XML, JSON.
 - gorm
 - ✅ Перепиши реализованное АПИ с использованием echo фреймворка
@@ -23,6 +24,9 @@
 
 - Mock-generator https://github.com/golang/mock
 - Тестирование json ответа https://github.com/kinbiko/jsonassert
+
+- Linter https://github.com/mgechev/revive
+
 
 ### run migration
 
