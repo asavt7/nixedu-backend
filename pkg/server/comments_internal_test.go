@@ -18,24 +18,24 @@ import (
 
 func TestCommentsHandler(t *testing.T) {
 
-	userId := 1
-	postId := 1
-	commentId := 1
+	userID := 1
+	postID := 1
+	commentID := 1
 	body := "body"
 
 	comment := model.Comment{
-		PostId: postId,
-		Id:     commentId,
-		UserId: userId,
+		PostId: postID,
+		Id:     commentID,
+		UserId: userID,
 		Body:   body,
 	}
 	comments := []model.Comment{comment}
 
-	expectedCommentsJson, err := json.Marshal(comments)
+	expectedCommentsJSON, err := json.Marshal(comments)
 	if err != nil {
 		t.Fatal(err)
 	}
-	expectedCommentJson, err := json.Marshal(comment)
+	expectedCommentJSON, err := json.Marshal(comment)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,10 +49,10 @@ func TestCommentsHandler(t *testing.T) {
 	handler := NewApiHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
-		commentService.EXPECT().Save(postId, model.Comment{
-			PostId: postId,
+		commentService.EXPECT().Save(postID, model.Comment{
+			PostId: postID,
 			Id:     0,
-			UserId: userId,
+			UserId: userID,
 			Body:   body,
 		}).Return(comment, nil)
 
@@ -63,17 +63,17 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.createComment(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
-			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentJson))
+			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentJSON))
 		}
 	})
 
 	t.Run("create - bad request body", func(t *testing.T) {
-		commentService.EXPECT().Save(postId, comment).Times(0).Return(comment, nil)
+		commentService.EXPECT().Save(postID, comment).Times(0).Return(comment, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{}`))
@@ -82,16 +82,16 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.createComment(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
 		}
 	})
 
-	t.Run("get all comments by postId", func(t *testing.T) {
-		commentService.EXPECT().GetAllByPostId(postId).Return(comments, nil)
+	t.Run("get all comments by postID", func(t *testing.T) {
+		commentService.EXPECT().GetAllByPostId(postID).Return(comments, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -100,17 +100,17 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
 		c.Set(currentUserId, 1111)
 
 		if assert.NoError(t, handler.getCommentsByPostId(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentsJson))
+			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentsJSON))
 		}
 	})
 
-	t.Run("get all comments by postId - user not found", func(t *testing.T) {
-		commentService.EXPECT().GetAllByPostId(postId).Return(comments, model.UserNotFoundErr{Id: userId})
+	t.Run("get all comments by postID - user not found", func(t *testing.T) {
+		commentService.EXPECT().GetAllByPostId(postID).Return(comments, model.UserNotFoundErr{Id: userID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -119,7 +119,7 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
 		c.Set(currentUserId, 1111)
 
 		if assert.NoError(t, handler.getCommentsByPostId(c)) {
@@ -128,7 +128,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("update - ok", func(t *testing.T) {
-		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Return(comment, nil)
+		commentService.EXPECT().Update(userID, commentID, model.UpdateComment{Body: &body}).Return(comment, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(`{"body":"`+body+`"}`))
@@ -137,17 +137,17 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentJson))
+			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentJSON))
 		}
 	})
 
 	t.Run("update - bad request - empty body", func(t *testing.T) {
-		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Times(0).Return(comment, nil)
+		commentService.EXPECT().Update(userID, commentID, model.UpdateComment{Body: &body}).Times(0).Return(comment, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(`{}`))
@@ -156,8 +156,8 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -165,9 +165,9 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("update - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Update(userId, commentId, model.UpdateComment{Body: &body}).Return(comment, model.UserHasNoAccessToChangeComment{
-			UserId:    userId,
-			CommentId: commentId,
+		commentService.EXPECT().Update(userID, commentID, model.UpdateComment{Body: &body}).Return(comment, model.UserHasNoAccessToChangeComment{
+			UserId:    userID,
+			CommentId: commentID,
 		})
 
 		e := echo.New()
@@ -177,8 +177,8 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)
@@ -186,7 +186,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - ok", func(t *testing.T) {
-		commentService.EXPECT().Delete(userId, commentId).Return(nil)
+		commentService.EXPECT().Delete(userID, commentID).Return(nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", strings.NewReader(`{"body":"`+body+`"}`))
@@ -195,8 +195,8 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.deleteComment(c)) {
 			assert.Equal(t, http.StatusNoContent, rec.Code)
@@ -204,9 +204,9 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - unauthorized", func(t *testing.T) {
-		commentService.EXPECT().Delete(userId, commentId).Return(model.UserHasNoAccessToChangeComment{
-			UserId:    userId,
-			CommentId: commentId,
+		commentService.EXPECT().Delete(userID, commentID).Return(model.UserHasNoAccessToChangeComment{
+			UserId:    userID,
+			CommentId: commentID,
 		})
 
 		e := echo.New()
@@ -216,8 +216,8 @@ func TestCommentsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
-		c.SetParamValues(strconv.Itoa(userId), strconv.Itoa(postId), strconv.Itoa(commentId))
-		c.Set(currentUserId, userId)
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
+		c.Set(currentUserId, userID)
 
 		if assert.NoError(t, handler.deleteComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)

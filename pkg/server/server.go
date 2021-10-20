@@ -7,23 +7,25 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-const ApiPath = "/api/v1"
+const apiPath = "/api/v1"
 
+// ApiServer struct
 type ApiServer struct {
 	Echo    *echo.Echo
 	handler *ApiHandler
 }
 
+// NewApiServer constructs ApiServer
 func NewApiServer(handler *ApiHandler) *ApiServer {
 	s := &ApiServer{
 		Echo:    echo.New(),
 		handler: handler,
 	}
-	s.InitRoutes()
+	s.initRoutes()
 	return s
 }
 
-func (srv *ApiServer) InitRoutes() {
+func (srv *ApiServer) initRoutes() {
 	srv.Echo.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
@@ -40,16 +42,16 @@ func (srv *ApiServer) InitRoutes() {
 
 	srv.Echo.GET("/health", healthCheck)
 
-	api := srv.Echo.Group(ApiPath)
+	api := srv.Echo.Group(apiPath)
 
-	api.Use(parseAccessToken(), srv.handler.TokenRefresherMiddleware)
+	api.Use(parseAccessToken(), srv.handler.tokenRefresherMiddleware)
 
 	usersApi := api.Group("/users/:userId")
 
 	usersApi.GET("/posts", srv.handler.getUserPosts)
 	usersApi.POST("/posts", srv.handler.createPost)
 
-	usersApi.GET("/posts/:postId", srv.handler.getUserPostById)
+	usersApi.GET("/posts/:postId", srv.handler.getUserPostByID)
 	usersApi.DELETE("/posts/:postId", srv.handler.deletePost)
 	usersApi.PUT("/posts/:postId", srv.handler.updatePost)
 
@@ -61,6 +63,7 @@ func (srv *ApiServer) InitRoutes() {
 
 }
 
+// Run method run server or fail app
 func (srv *ApiServer) Run() {
 
 	srv.Echo.Logger.Fatal(srv.Echo.Start(":8080"))

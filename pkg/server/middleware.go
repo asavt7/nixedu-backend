@@ -24,7 +24,7 @@ func parseAccessToken() echo.MiddlewareFunc {
 	})
 }
 
-func (h *ApiHandler) TokenRefresherMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+func (h *ApiHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		tok := c.Get("user")

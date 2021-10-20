@@ -30,8 +30,8 @@ type signInResponse struct {
 // @Produce  json,xml
 // @Param signInUserInput body signInUserInput true "body"
 // @Success 200 {object} signInResponse
-// @Failure 400 {object} Message
-// @Failure 500 {object} Message
+// @Failure 400 {object} message
+// @Failure 500 {object} message
 // @Router /sign-in [post]
 func (h *ApiHandler) signIn(c echo.Context) error {
 	u := new(signInUserInput)
@@ -82,7 +82,7 @@ func (h *ApiHandler) setTokenCookie(name, token string, expiration time.Time, c 
 	cookie.Name = name
 	cookie.Value = token
 	cookie.Expires = expiration
-	cookie.Path = ApiPath
+	cookie.Path = apiPath
 	// Http-only helps mitigate the risk of client side script accessing the protected cookie.
 	cookie.HttpOnly = true
 
@@ -112,8 +112,8 @@ type signUpUserInput struct {
 // @Produce  json,xml
 // @Param signUpUserInput body signUpUserInput true "a body"
 // @Success 200 {object} model.User
-// @Failure 400 {object} Message
-// @Failure 500 {object} Message
+// @Failure 400 {object} message
+// @Failure 500 {object} message
 // @Router /sign-up [post]
 func (h *ApiHandler) signUp(c echo.Context) error {
 	u := new(signUpUserInput)

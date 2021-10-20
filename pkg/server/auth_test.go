@@ -22,7 +22,7 @@ const (
 	username         = "Bret"
 	email            = "Sincere@april.biz"
 	createduserId    = "15"
-	createduserIdInt = 15
+	createduserIDInt = 15
 	password         = "password"
 	createUserRqBody = `{
     "id": 1,
@@ -95,7 +95,7 @@ func TestSignUp(t *testing.T) {
 
 	t.Run("signUp ok", func(t *testing.T) {
 		createdUser := model.User{
-			Id:           createduserIdInt,
+			Id:           createduserIDInt,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "hash",
@@ -120,7 +120,7 @@ func TestSignUp(t *testing.T) {
 
 	t.Run("signUp ok", func(t *testing.T) {
 		createdUser := model.User{
-			Id:           createduserIdInt,
+			Id:           createduserIDInt,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "hash",
@@ -155,7 +155,7 @@ func assertXmlResponseSignUp(t *testing.T, s string) {
 	}
 	assert.Equal(t, username, u.Username)
 	assert.Equal(t, email, u.Email)
-	assert.Equal(t, createduserIdInt, u.Id)
+	assert.Equal(t, createduserIDInt, u.Id)
 
 }
 

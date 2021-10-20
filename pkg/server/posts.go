@@ -16,25 +16,25 @@ import (
 // @Produce  json,xml
 // @Param userId path int true "userId"
 // @Success 200 {object} []model.Post
-// @Failure 404 {object} Message
-// @Failure 500 {object} Message
+// @Failure 404 {object} message
+// @Failure 500 {object} message
 // @Router /api/v1/users/{userId}/posts [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) getUserPosts(context echo.Context) error {
 	userId := context.Param("userId")
-	userIdInt, err := strconv.Atoi(userId)
+	userIDInt, err := strconv.Atoi(userId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
 
-	posts, err := h.service.PostService.GetAllByUserId(userIdInt)
+	posts, err := h.service.PostService.GetAllByUserId(userIDInt)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr:
-			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+			return response(http.StatusNotFound, message{Message: err.Error()}, context)
 		default:
-			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+			return response(http.StatusInternalServerError, message{Message: err.Error()}, context)
 		}
 	}
 	return response(http.StatusOK, posts, context)
@@ -51,15 +51,15 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 // @Param post body model.Post true "post"
 // @Success 201 {object} model.Post
 // @Header 201 {string} Location "/api/v1/users/{userId}/posts/{postId}"
-// @Failure 400 {object} Message
-// @Failure 500 {object} Message
+// @Failure 400 {object} message
+// @Failure 500 {object} message
 // @Router /api/v1/users/{userId}/posts [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) createPost(context echo.Context) error {
 
 	userId := context.Param("userId")
-	userIdInt, err := strconv.Atoi(userId)
+	userIDInt, err := strconv.Atoi(userId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
@@ -73,58 +73,58 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 	}
 
 	currentUser := context.Get(currentUserId).(int)
-	if currentUser != userIdInt {
+	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
 
-	post, err := h.service.PostService.Save(userIdInt, *newPost)
+	post, err := h.service.PostService.Save(userIDInt, *newPost)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
-			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+			return response(http.StatusNotFound, message{Message: err.Error()}, context)
 		default:
-			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+			return response(http.StatusInternalServerError, message{Message: err.Error()}, context)
 		}
 	}
 	return response(http.StatusCreated, post, context)
 
 }
 
-// getUserPostById godoc
+// getUserPostByID godoc
 // @Tags posts
-// @Summary getUserPostById
-// @Description getUserPostById
-// @ID getUserPostById
+// @Summary getUserPostByID
+// @Description getUserPostByID
+// @ID getUserPostByID
 // @Accept  json,xml
 // @Produce  json,xml
 // @Param userId path int true "userId"
 // @Param userId path int true "postId"
 // @Success 200 {object} model.Post
-// @Failure 404 {object} Message
-// @Failure 500 {object} Message
+// @Failure 404 {object} message
+// @Failure 500 {object} message
 // @Router /api/v1/users/{userId}/posts/{postId} [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) getUserPostById(context echo.Context) error {
+func (h *ApiHandler) getUserPostByID(context echo.Context) error {
 
 	userId := context.Param("userId")
-	userIdInt, err := strconv.Atoi(userId)
+	userIDInt, err := strconv.Atoi(userId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
 	postId := context.Param("postId")
-	postIdInt, err := strconv.Atoi(postId)
+	postIDInt, err := strconv.Atoi(postId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
-	post, err := h.service.PostService.GetByUserIdAndPostId(userIdInt, postIdInt)
+	post, err := h.service.PostService.GetByUserIdAndPostId(userIDInt, postIDInt)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
-			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+			return response(http.StatusNotFound, message{Message: err.Error()}, context)
 		default:
-			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+			return response(http.StatusInternalServerError, message{Message: err.Error()}, context)
 		}
 	}
 	return response(http.StatusOK, post, context)
@@ -141,34 +141,34 @@ func (h *ApiHandler) getUserPostById(context echo.Context) error {
 // @Param userId path int true "userId"
 // @Param userId path int true "postId"
 // @Success 204 {object} model.Post
-// @Failure 404 {object} Message
-// @Failure 500 {object} Message
+// @Failure 404 {object} message
+// @Failure 500 {object} message
 // @Router /api/v1/users/{userId}/posts/{postId} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) deletePost(context echo.Context) error {
 	userId := context.Param("userId")
-	userIdInt, err := strconv.Atoi(userId)
+	userIDInt, err := strconv.Atoi(userId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
 	postId := context.Param("postId")
-	postIdInt, err := strconv.Atoi(postId)
+	postIDInt, err := strconv.Atoi(postId)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
 	currentUser := context.Get(currentUserId).(int)
-	if currentUser != userIdInt {
+	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
 
-	if err := h.service.PostService.DeletePost(userIdInt, postIdInt); err != nil {
+	if err := h.service.PostService.DeletePost(userIDInt, postIDInt); err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
-			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+			return response(http.StatusNotFound, message{Message: err.Error()}, context)
 		default:
-			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+			return response(http.StatusInternalServerError, message{Message: err.Error()}, context)
 		}
 	}
 	return context.NoContent(http.StatusNoContent)
@@ -186,25 +186,25 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 // @Param userId path int true "postId"
 // @Param post body model.UpdatePost true "post"
 // @Success 200 {object} model.Post
-// @Failure 404 {object} Message
-// @Failure 500 {object} Message
+// @Failure 404 {object} message
+// @Failure 500 {object} message
 // @Router /api/v1/users/{userId}/posts/{postId} [put]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) updatePost(context echo.Context) error {
-	userId := context.Param("userId")
-	userIdInt, err := strconv.Atoi(userId)
+	userID := context.Param("userId")
+	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
-		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
+		return response(http.StatusBadRequest, "missing or incorrect userID param, expected int", context)
 	}
-	postId := context.Param("postId")
-	postIdInt, err := strconv.Atoi(postId)
+	postID := context.Param("postId")
+	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
-		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
+		return response(http.StatusBadRequest, "missing or incorrect postID param, expected int", context)
 	}
 
 	currentUser := context.Get(currentUserId).(int)
-	if currentUser != userIdInt {
+	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
 
@@ -216,13 +216,13 @@ func (h *ApiHandler) updatePost(context echo.Context) error {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
-	post, err := h.service.PostService.Update(userIdInt, postIdInt, *updatePostInput)
+	post, err := h.service.PostService.Update(userIDInt, postIDInt, *updatePostInput)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
-			return response(http.StatusNotFound, Message{Message: err.Error()}, context)
+			return response(http.StatusNotFound, message{Message: err.Error()}, context)
 		default:
-			return response(http.StatusInternalServerError, Message{Message: err.Error()}, context)
+			return response(http.StatusInternalServerError, message{Message: err.Error()}, context)
 		}
 	}
 	return response(http.StatusOK, post, context)

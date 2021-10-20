@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type Message struct {
+type message struct {
 	Message string `json:"message" xml:"message"`
 }
 
