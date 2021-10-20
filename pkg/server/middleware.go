@@ -18,8 +18,8 @@ func parseAccessToken() echo.MiddlewareFunc {
 			tok := c.Get("user")
 			accessToken := tok.(*jwt.Token)
 			claims := accessToken.Claims.(*service.Claims)
-			userId := claims.UserId
-			c.Set(currentUserId, userId)
+			userID := claims.UserID
+			c.Set(currentUserID, userID)
 		},
 	})
 }
@@ -50,7 +50,7 @@ func (h *ApiHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 					return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 				}
 
-				if claims.UserId != refreshClaims.UserId {
+				if claims.UserID != refreshClaims.UserID {
 					return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 				}
 
@@ -59,7 +59,7 @@ func (h *ApiHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 					return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 				}
 
-				_, _, err = h.generateTokensAndSetCookies(claims.UserId, c)
+				_, _, err = h.generateTokensAndSetCookies(claims.UserID, c)
 				if err != nil {
 					return echo.NewHTTPError(http.StatusUnauthorized, "Token is incorrect")
 				}

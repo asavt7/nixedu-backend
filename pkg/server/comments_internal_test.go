@@ -64,7 +64,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.createComment(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
@@ -83,7 +83,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.createComment(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -101,7 +101,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
-		c.Set(currentUserId, 1111)
+		c.Set(currentUserID, 1111)
 
 		if assert.NoError(t, handler.getCommentsByPostId(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
@@ -120,7 +120,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
-		c.Set(currentUserId, 1111)
+		c.Set(currentUserID, 1111)
 
 		if assert.NoError(t, handler.getCommentsByPostId(c)) {
 			assert.Equal(t, http.StatusNotFound, rec.Code)
@@ -138,7 +138,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
@@ -157,7 +157,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -178,7 +178,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updateComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)
@@ -196,7 +196,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.deleteComment(c)) {
 			assert.Equal(t, http.StatusNoContent, rec.Code)
@@ -217,7 +217,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId/comments/:commentId")
 		c.SetParamNames("userId", "postId", "commentId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID), strconv.Itoa(commentID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.deleteComment(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)

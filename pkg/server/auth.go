@@ -9,7 +9,7 @@ import (
 
 const refreshTokenCookieName = "refresh-token"
 const accessTokenCookieName = "access-token"
-const currentUserId = "currentUserId"
+const currentUserID = "currentUserID"
 
 type signInUserInput struct {
 	Password string `json:"password" xml:"password" validate:"required"`
@@ -65,8 +65,8 @@ func (h *ApiHandler) signIn(c echo.Context) error {
 	}, c)
 }
 
-func (h *ApiHandler) generateTokensAndSetCookies(userId int, c echo.Context) (accessToken, refreshToken string, err error) {
-	accessToken, refreshToken, accessExp, refreshExp, err := h.service.AuthorizationService.GenerateTokens(userId)
+func (h *ApiHandler) generateTokensAndSetCookies(userID int, c echo.Context) (accessToken, refreshToken string, err error) {
+	accessToken, refreshToken, accessExp, refreshExp, err := h.service.AuthorizationService.GenerateTokens(userID)
 	if err != nil {
 		return accessToken, refreshToken, err
 	}
@@ -89,10 +89,10 @@ func (h *ApiHandler) setTokenCookie(name, token string, expiration time.Time, c 
 	c.SetCookie(cookie)
 }
 
-func (h *ApiHandler) setUserCookie(userId string, expiration time.Time, c echo.Context) {
+func (h *ApiHandler) setUserCookie(userID string, expiration time.Time, c echo.Context) {
 	cookie := new(http.Cookie)
 	cookie.Name = "userId"
-	cookie.Value = userId
+	cookie.Value = userID
 	cookie.Expires = expiration
 	cookie.Path = "/"
 	c.SetCookie(cookie)

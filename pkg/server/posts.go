@@ -22,8 +22,8 @@ import (
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) getUserPosts(context echo.Context) error {
-	userId := context.Param("userId")
-	userIDInt, err := strconv.Atoi(userId)
+	userID := context.Param("userId")
+	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
@@ -58,8 +58,8 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) createPost(context echo.Context) error {
 
-	userId := context.Param("userId")
-	userIDInt, err := strconv.Atoi(userId)
+	userID := context.Param("userId")
+	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
@@ -72,7 +72,7 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
-	currentUser := context.Get(currentUserId).(int)
+	currentUser := context.Get(currentUserID).(int)
 	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
@@ -107,13 +107,13 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) getUserPostByID(context echo.Context) error {
 
-	userId := context.Param("userId")
-	userIDInt, err := strconv.Atoi(userId)
+	userID := context.Param("userId")
+	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
-	postId := context.Param("postId")
-	postIDInt, err := strconv.Atoi(postId)
+	postID := context.Param("postId")
+	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
@@ -147,18 +147,18 @@ func (h *ApiHandler) getUserPostByID(context echo.Context) error {
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) deletePost(context echo.Context) error {
-	userId := context.Param("userId")
-	userIDInt, err := strconv.Atoi(userId)
+	userID := context.Param("userId")
+	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
-	postId := context.Param("postId")
-	postIDInt, err := strconv.Atoi(postId)
+	postID := context.Param("postId")
+	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
-	currentUser := context.Get(currentUserId).(int)
+	currentUser := context.Get(currentUserID).(int)
 	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
@@ -203,7 +203,7 @@ func (h *ApiHandler) updatePost(context echo.Context) error {
 		return response(http.StatusBadRequest, "missing or incorrect postID param, expected int", context)
 	}
 
-	currentUser := context.Get(currentUserId).(int)
+	currentUser := context.Get(currentUserID).(int)
 	if currentUser != userIDInt {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}

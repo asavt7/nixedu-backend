@@ -30,7 +30,7 @@ func GetJWTSecret() string {
 }
 
 type Claims struct {
-	UserId int    `json:"userId"`
+	UserID int    `json:"userId"`
 	Uuid   string `json:"uuid"`
 	jwt.StandardClaims
 }
@@ -41,8 +41,8 @@ type AuthorizationServiceImpl struct {
 }
 
 func (s *AuthorizationServiceImpl) Logout(accessTokenClaims *Claims) error {
-	userId := accessTokenClaims.UserId
-	return s.tokenStore.Delete(userId)
+	userID := accessTokenClaims.UserID
+	return s.tokenStore.Delete(userID)
 }
 
 func (s *AuthorizationServiceImpl) ValidateRefreshToken(accessTokenClaims *Claims) error {
@@ -58,7 +58,7 @@ func (s *AuthorizationServiceImpl) ValidateAccessToken(accessTokenClaims *Claims
 }
 
 func (s *AuthorizationServiceImpl) validateToken(accessTokenClaims *Claims, tokenFromCashedFunc func(model.CachedTokens) string) error {
-	userId := accessTokenClaims.UserId
+	userId := accessTokenClaims.UserID
 	clientTokenUuid := accessTokenClaims.Uuid
 
 	cached, err := s.tokenStore.Get(userId)
@@ -109,9 +109,9 @@ func (s *AuthorizationServiceImpl) parseTokenToClaims(token string, key []byte) 
 	return tkn.Claims.(*Claims), nil
 }
 
-func (s *AuthorizationServiceImpl) GenerateTokens(userId int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error) {
-	accessToken, accessUuid, accessExp, err := generateToken(userId, time.Now().Add(accessTokenTTL), []byte(GetJWTSecret()))
-	refreshToken, refreshUuid, refreshExp, err := generateToken(userId, time.Now().Add(refreshTokenTTL), []byte(GetRefreshJWTSecret()))
+func (s *AuthorizationServiceImpl) GenerateTokens(userID int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error) {
+	accessToken, accessUuid, accessExp, err := generateToken(userID, time.Now().Add(accessTokenTTL), []byte(GetJWTSecret()))
+	refreshToken, refreshUuid, refreshExp, err := generateToken(userID, time.Now().Add(refreshTokenTTL), []byte(GetRefreshJWTSecret()))
 
 	if err != nil {
 		return
@@ -121,15 +121,15 @@ func (s *AuthorizationServiceImpl) GenerateTokens(userId int) (accessToken, refr
 		AccessUID:  accessUuid,
 		RefreshUID: refreshUuid,
 	}
-	_, err = s.tokenStore.Save(userId, cashedTokens)
+	_, err = s.tokenStore.Save(userID, cashedTokens)
 
 	return
 }
 
-func generateToken(userId int, expirationTime time.Time, secret []byte) (string, string, time.Time, error) {
+func generateToken(userID int, expirationTime time.Time, secret []byte) (string, string, time.Time, error) {
 	tokenUuid := uuid.New().String()
 	claims := &Claims{
-		UserId: userId,
+		UserID: userID,
 		Uuid:   tokenUuid,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),

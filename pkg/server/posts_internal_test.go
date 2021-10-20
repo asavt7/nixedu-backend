@@ -52,7 +52,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts")
 		c.SetParamNames("userId")
 		c.SetParamValues(strconv.Itoa(userID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.createPost(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
@@ -71,7 +71,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts")
 		c.SetParamNames("userId")
 		c.SetParamValues(strconv.Itoa(userID))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.createPost(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -89,7 +89,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts")
 		c.SetParamNames("userId")
 		c.SetParamValues(strconv.Itoa(userID))
-		c.Set(currentUserId, 1111)
+		c.Set(currentUserID, 1111)
 
 		if assert.NoError(t, handler.createPost(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)
@@ -192,7 +192,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updatePost(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
@@ -214,7 +214,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updatePost(c)) {
 			assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -235,7 +235,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
-		c.Set(currentUserId, 111111)
+		c.Set(currentUserID, 111111)
 
 		if assert.NoError(t, handler.updatePost(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)
@@ -253,7 +253,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
-		c.Set(currentUserId, userID)
+		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.deletePost(c)) {
 			assert.Equal(t, http.StatusNoContent, rec.Code)
@@ -271,7 +271,7 @@ func TestPostsHandler(t *testing.T) {
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
-		c.Set(currentUserId, 111111)
+		c.Set(currentUserID, 111111)
 
 		if assert.NoError(t, handler.deletePost(c)) {
 			assert.Equal(t, http.StatusUnauthorized, rec.Code)

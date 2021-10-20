@@ -25,8 +25,8 @@ import (
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) createComment(context echo.Context) error {
 
-	postId := context.Param("postId")
-	postIDInt, err := strconv.Atoi(postId)
+	postID := context.Param("postId")
+	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
@@ -36,7 +36,7 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
-	newComment.UserId = context.Get(currentUserId).(int)
+	newComment.UserId = context.Get(currentUserID).(int)
 	newComment.PostId = postIDInt
 
 	if err := h.validator.Struct(newComment); err != nil {
@@ -71,8 +71,8 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
-	postId := context.Param("postId")
-	postIDInt, err := strconv.Atoi(postId)
+	postID := context.Param("postId")
+	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
@@ -107,13 +107,13 @@ func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) deleteComment(context echo.Context) error {
 
-	commentId := context.Param("commentId")
-	commentIDInt, err := strconv.Atoi(commentId)
+	commentID := context.Param("commentId")
+	commentIDInt, err := strconv.Atoi(commentID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect commentId param, expected int", context)
 	}
 
-	currentUser := context.Get(currentUserId).(int)
+	currentUser := context.Get(currentUserID).(int)
 
 	if err := h.service.CommentService.Delete(currentUser, commentIDInt); err != nil {
 		switch err.(type) {
@@ -148,13 +148,13 @@ func (h *ApiHandler) deleteComment(context echo.Context) error {
 // @param Authorization header string true "Authorization"
 func (h *ApiHandler) updateComment(context echo.Context) error {
 
-	commentId := context.Param("commentId")
-	commentIDInt, err := strconv.Atoi(commentId)
+	commentID := context.Param("commentId")
+	commentIDInt, err := strconv.Atoi(commentID)
 	if err != nil {
 		return response(http.StatusBadRequest, "missing or incorrect commentId param, expected int", context)
 	}
 
-	currentUser := context.Get(currentUserId).(int)
+	currentUser := context.Get(currentUserID).(int)
 
 	updateInput := new(model.UpdateComment)
 	if err := context.Bind(updateInput); err != nil {
