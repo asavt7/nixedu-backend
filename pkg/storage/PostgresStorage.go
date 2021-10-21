@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/jmoiron/sqlx"
+	// import postgres drivers
 	_ "github.com/lib/pq"
 )
 

@@ -13,7 +13,7 @@ func (p *PostgresCommentsStorage) GetAllByUserID(userID int) ([]model.Comment, e
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) GetAllByPostID(postId int) ([]model.Comment, error) {
+func (p *PostgresCommentsStorage) GetAllByPostID(postID int) ([]model.Comment, error) {
 	panic("implement me")
 }
 
