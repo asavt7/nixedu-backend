@@ -93,7 +93,7 @@ func TestPostServiceImpl_GetByUserIdAndPostId(t *testing.T) {
 		assert.Equal(t, post, actual)
 	})
 	t.Run("err", func(t *testing.T) {
-		postsStorage.EXPECT().GetByUserIDAndID(1, 1).Return(nil, errors.New("err"))
+		postsStorage.EXPECT().GetByUserIDAndID(1, 1).Return(model.Post{}, errors.New("err"))
 		_, err := postsService.GetByUserIDAndPostID(1, 1)
 		if err == nil {
 			t.Errorf("err should not be nil")

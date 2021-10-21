@@ -76,7 +76,7 @@ func (p *PostgresUserStorage) Create(user model.User) (model.User, error) {
 
 }
 
-// GetById - GetById
+// GetByID - GetByID
 func (p *PostgresUserStorage) GetByID(userID int) (model.User, error) {
 	var user model.User
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)

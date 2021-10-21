@@ -42,7 +42,7 @@ func TestPostgresPostsStorage_Save(t *testing.T) {
 			},
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id"}).AddRow(1)
-				mock.ExpectQuery("INSERT INTO nix.posts \\(userid,title,body\\) values").WithArgs(1, "title", "body").WillReturnRows(rows)
+				mock.ExpectQuery("INSERT INTO nix.posts \\(userid, title, body\\) VALUES").WithArgs(1, "title", "body").WillReturnRows(rows)
 			},
 			want: model.Post{
 				UserID: 1,
@@ -56,7 +56,7 @@ func TestPostgresPostsStorage_Save(t *testing.T) {
 			s:    repo,
 			post: model.Post{},
 			mock: func() {
-				mock.ExpectQuery("INSERT INTO nix.posts \\(userid,title,body\\) values").WithArgs("", "", "").WillReturnError(errors.New("invalid values"))
+				mock.ExpectQuery("INSERT INTO nix.posts \\(userid, title, body\\) VALUES").WithArgs(0, "", "").WillReturnError(errors.New("invalid values"))
 			},
 			want:    model.Post{},
 			wantErr: true,
@@ -70,7 +70,7 @@ func TestPostgresPostsStorage_Save(t *testing.T) {
 				Body:   "body",
 			},
 			mock: func() {
-				mock.ExpectQuery("INSERT INTO nix.posts \\(userid,title,body\\) values").WithArgs(1, "title", "body").WillReturnError(errors.New("user already exists"))
+				mock.ExpectQuery("INSERT INTO nix.posts \\(userid, title, body\\) VALUES").WithArgs(1, "title", "body").WillReturnError(errors.New("user already exists"))
 			},
 			want: model.Post{
 				UserID: 1,
@@ -112,7 +112,7 @@ func TestPostgresPostsStorage_GetAll(t *testing.T) {
 			s:    repo,
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id", "userid", "title", "body"}).AddRow(1, 1, "title", "body")
-				mock.ExpectQuery("SELECT * FROM nix.posts").WillReturnRows(rows)
+				mock.ExpectQuery("SELECT \\* FROM nix.posts").WillReturnRows(rows)
 			},
 			want: []model.Post{{
 				UserID: 1,
@@ -131,7 +131,7 @@ func TestPostgresPostsStorage_GetAll(t *testing.T) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err == nil && assert.Equal(t, tt.want, got) {
+			if err != nil || !assert.EqualValues(t, tt.want, got) {
 				t.Errorf(" = %v, want %v", got, tt.want)
 			}
 		})
@@ -154,7 +154,7 @@ func TestPostgresPostsStorage_GetAllByUserID(t *testing.T) {
 			s:    repo,
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id", "userid", "title", "body"}).AddRow(1, 1, "title", "body")
-				mock.ExpectQuery("SELECT * FROM nix.posts WHERE userid=\\$1").WithArgs(1).WillReturnRows(rows)
+				mock.ExpectQuery("SELECT \\* FROM nix.posts WHERE userid=\\$1").WithArgs(1).WillReturnRows(rows)
 			},
 			want: []model.Post{{
 				UserID: 1,
@@ -173,7 +173,7 @@ func TestPostgresPostsStorage_GetAllByUserID(t *testing.T) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err == nil && assert.Equal(t, tt.want, got) {
+			if err != nil && !assert.Equal(t, tt.want, got) {
 				t.Errorf(" = %v, want %v", got, tt.want)
 			}
 		})
@@ -204,7 +204,7 @@ func TestPostgresPostsStorage_Update(t *testing.T) {
 			},
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id", "userid", "title", "body"}).AddRow(1, 1, "title", "body")
-				mock.ExpectQuery("UPDATE nix.posts SET title=\\$1, body=\\$2 WHERE id=\\$3").WithArgs(title, body, 1).WillReturnRows(rows)
+				mock.ExpectQuery("UPDATE nix.posts SET title=\\$1, body=\\$2 WHERE userid=\\$3 AND id=\\$4").WithArgs(title, body, 1, 1).WillReturnRows(rows)
 			},
 			want: model.Post{
 				UserID: 1,
@@ -221,7 +221,7 @@ func TestPostgresPostsStorage_Update(t *testing.T) {
 			},
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id", "userid", "title", "body"}).AddRow(1, 1, "title", "body")
-				mock.ExpectQuery("UPDATE nix.posts SET title=\\$1 WHERE id=\\$2").WithArgs(title, 1).WillReturnRows(rows)
+				mock.ExpectQuery("UPDATE nix.posts SET title=\\$1 WHERE userid=\\$2 AND id=\\$3").WithArgs(title, 1, 1).WillReturnRows(rows)
 			},
 			want: model.Post{
 				UserID: 1,
@@ -238,7 +238,7 @@ func TestPostgresPostsStorage_Update(t *testing.T) {
 			},
 			mock: func() {
 				rows := sqlmock.NewRows([]string{"id", "userid", "title", "body"}).AddRow(1, 1, "title", "body")
-				mock.ExpectQuery("UPDATE nix.posts SET body=\\$1 WHERE id=\\$2").WithArgs(body, 1).WillReturnRows(rows)
+				mock.ExpectQuery("UPDATE nix.posts SET body=\\$1 WHERE userid=\\$2 AND id=\\$3").WithArgs(body, 1, 1).WillReturnRows(rows)
 			},
 			want: model.Post{
 				UserID: 1,
@@ -254,7 +254,7 @@ func TestPostgresPostsStorage_Update(t *testing.T) {
 				Body: &body,
 			},
 			mock: func() {
-				mock.ExpectQuery("UPDATE nix.posts SET body=\\$1 WHERE id=\\$2").WithArgs(body, 1).WillReturnError(errors.New("error"))
+				mock.ExpectQuery("UPDATE nix.posts SET body=\\$1 WHERE userid=\\$2 AND id=\\$3").WithArgs(body, 1, 1).WillReturnError(errors.New("error"))
 			},
 			wantErr: true,
 		},
@@ -304,7 +304,8 @@ func TestPostgresPostsStorage_DeleteByUserIDAndID(t *testing.T) {
 				Body:  "body",
 			},
 			mock: func() {
-				mock.ExpectQuery("DELETE FROM nix.posts WHERE id=\\$1 and userid=\\$2").WithArgs(1, 1)
+				rows := sqlmock.NewRows([]string{"id"}).AddRow(1)
+				mock.ExpectQuery("DELETE FROM nix.posts").WithArgs(1, 1).WillReturnRows(rows)
 			},
 		},
 		{
@@ -312,7 +313,8 @@ func TestPostgresPostsStorage_DeleteByUserIDAndID(t *testing.T) {
 			s:    repo,
 			post: model.Post{},
 			mock: func() {
-				mock.ExpectQuery("DELETE FROM nix.posts WHERE id=\\$1 and userid=\\$2").WithArgs(1, 1)
+				rows := sqlmock.NewRows([]string{"id"})
+				mock.ExpectQuery("DELETE FROM nix.posts").WithArgs(1, 1).WillReturnRows(rows)
 			},
 			want:    model.Post{},
 			wantErr: true,
@@ -322,7 +324,7 @@ func TestPostgresPostsStorage_DeleteByUserIDAndID(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
-			err := tt.s.DeleteByUserIDAndID(tt.post.UserID, tt.post.ID)
+			err := tt.s.DeleteByUserIDAndID(1, 1)
 			if (err != nil) != tt.wantErr {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
