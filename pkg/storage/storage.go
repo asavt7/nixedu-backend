@@ -20,7 +20,7 @@ type CommentsStorage interface {
 	GetAllByPostID(postID int) ([]model.Comment, error)
 	GetByCommentID(commentID int) (model.Comment, error)
 
-	Update(userID, postID, commentID int, p model.UpdateComment) (model.Comment, error)
+	Update(userID, commentID int, p model.UpdateComment) (model.Comment, error)
 	DeleteByUserIDAndID(userID, commentID int) error
 }
 

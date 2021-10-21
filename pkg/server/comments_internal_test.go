@@ -24,9 +24,9 @@ func TestCommentsHandler(t *testing.T) {
 	body := "body"
 
 	comment := model.Comment{
-		PostId: postID,
+		PostID: postID,
 		Id:     commentID,
-		UserId: userID,
+		UserID: userID,
 		Body:   body,
 	}
 	comments := []model.Comment{comment}
@@ -49,10 +49,10 @@ func TestCommentsHandler(t *testing.T) {
 	handler := NewAPIHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
-		commentService.EXPECT().Save(postID, model.Comment{
-			PostId: postID,
+		commentService.EXPECT().Save(model.Comment{
+			PostID: postID,
 			Id:     0,
-			UserId: userID,
+			UserID: userID,
 			Body:   body,
 		}).Return(comment, nil)
 
@@ -73,7 +73,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("create - bad request body", func(t *testing.T) {
-		commentService.EXPECT().Save(postID, comment).Times(0).Return(comment, nil)
+		commentService.EXPECT().Save(comment).Times(0).Return(comment, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{}`))
@@ -91,7 +91,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("get all comments by postID", func(t *testing.T) {
-		commentService.EXPECT().GetAllByPostId(postID).Return(comments, nil)
+		commentService.EXPECT().GetAllByPostID(postID).Return(comments, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -110,7 +110,7 @@ func TestCommentsHandler(t *testing.T) {
 	})
 
 	t.Run("get all comments by postID - user not found", func(t *testing.T) {
-		commentService.EXPECT().GetAllByPostId(postID).Return(comments, model.UserNotFoundErr{Id: userID})
+		commentService.EXPECT().GetAllByPostID(postID).Return(comments, model.UserNotFoundErr{Id: userID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -167,7 +167,7 @@ func TestCommentsHandler(t *testing.T) {
 	t.Run("update - unauthorized", func(t *testing.T) {
 		commentService.EXPECT().Update(userID, commentID, model.UpdateComment{Body: &body}).Return(comment, model.UserHasNoAccessToChangeComment{
 			UserId:    userID,
-			CommentId: commentID,
+			CommentID: commentID,
 		})
 
 		e := echo.New()
@@ -206,7 +206,7 @@ func TestCommentsHandler(t *testing.T) {
 	t.Run("delete - unauthorized", func(t *testing.T) {
 		commentService.EXPECT().Delete(userID, commentID).Return(model.UserHasNoAccessToChangeComment{
 			UserId:    userID,
-			CommentId: commentID,
+			CommentID: commentID,
 		})
 
 		e := echo.New()

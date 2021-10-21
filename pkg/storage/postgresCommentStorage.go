@@ -21,7 +21,7 @@ func (p *PostgresCommentsStorage) GetByCommentID(commentID int) (model.Comment, 
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) Update(userID, postID, commentID int, comment model.UpdateComment) (model.Comment, error) {
+func (p *PostgresCommentsStorage) Update(userID, commentID int, comment model.UpdateComment) (model.Comment, error) {
 	panic("implement me")
 }
 
@@ -38,8 +38,8 @@ func (p *PostgresCommentsStorage) Save(c model.Comment) (model.Comment, error) {
 		sqlStatement :=
 			`INSERT INTO nix.comments (id, postId, name, email, Body) VALUES ($1, $2, $3, $4, $5) returning *`
 
-		res := p.db.QueryRow(sqlStatement, c.ID, c.PostId, c.Name, c.Email, c.Body)
-		err := res.Scan(&c.ID, &c.PostId, &c.Name, &c.Email, &c.Body)
+		res := p.db.QueryRow(sqlStatement, c.ID, c.PostID, c.Name, c.Email, c.Body)
+		err := res.Scan(&c.ID, &c.PostID, &c.Name, &c.Email, &c.Body)
 		if err != nil {
 			return model.Comment{}, err
 		}

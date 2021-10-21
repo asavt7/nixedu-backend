@@ -17,10 +17,10 @@ type PostService interface {
 }
 
 type CommentService interface {
-	GetAllByPostId(postId int) ([]model.Comment, error)
-	Save(postId int, comment model.Comment) (model.Comment, error)
-	Update(currentuserID, commentID int, comment model.UpdateComment) (model.Comment, error)
-	Delete(currentuserID, commentID int) error
+	GetAllByPostID(postID int) ([]model.Comment, error)
+	Save(comment model.Comment) (model.Comment, error)
+	Update(currentUserID, commentID int, comment model.UpdateComment) (model.Comment, error)
+	Delete(currentUserID, commentID int) error
 }
 
 type UserService interface {

@@ -36,14 +36,14 @@ func (h *APIHandler) createComment(context echo.Context) error {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
-	newComment.UserId = context.Get(currentUserID).(int)
-	newComment.PostId = postIDInt
+	newComment.UserID = context.Get(currentUserID).(int)
+	newComment.PostID = postIDInt
 
 	if err := h.validator.Struct(newComment); err != nil {
 		return response(http.StatusBadRequest, err.Error(), context)
 	}
 
-	post, err := h.service.CommentService.Save(postIDInt, *newComment)
+	post, err := h.service.CommentService.Save(*newComment)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
@@ -77,7 +77,7 @@ func (h *APIHandler) getCommentsByPostID(context echo.Context) error {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
-	post, err := h.service.CommentService.GetAllByPostId(postIDInt)
+	post, err := h.service.CommentService.GetAllByPostID(postIDInt)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:
