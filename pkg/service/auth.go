@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/storage"
-	"github.com/asavt7/nixEducation/pkg/tokenstorage"
+	"github.com/asavt7/nixedu/backend/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/storage"
+	"github.com/asavt7/nixedu/backend/pkg/tokenstorage"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

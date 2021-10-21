@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/asavt7/nixEducation/pkg/service"
+	"github.com/asavt7/nixedu/backend/pkg/service"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

@@ -1,4 +1,4 @@
-module github.com/asavt7/nixEducation
+module github.com/asavt7/nixedu/backend
 
 go 1.16
 

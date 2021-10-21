@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/asavt7/nixEducation/pkg/configs"
-	"github.com/asavt7/nixEducation/pkg/server"
-	"github.com/asavt7/nixEducation/pkg/service"
-	"github.com/asavt7/nixEducation/pkg/storage"
-	"github.com/asavt7/nixEducation/pkg/tokenstorage"
+	"github.com/asavt7/nixedu/backend/pkg/configs"
+	"github.com/asavt7/nixedu/backend/pkg/server"
+	"github.com/asavt7/nixedu/backend/pkg/service"
+	"github.com/asavt7/nixedu/backend/pkg/storage"
+	"github.com/asavt7/nixedu/backend/pkg/tokenstorage"
 	"time"
 )
 

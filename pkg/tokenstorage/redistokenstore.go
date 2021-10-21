@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/model"
 	"github.com/go-redis/redis/v8"
 	"log"
 	"strconv"

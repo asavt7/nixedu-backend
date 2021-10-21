@@ -2,9 +2,9 @@ package server
 
 import (
 	"encoding/json"
-	mock_service "github.com/asavt7/nixEducation/mocks/pkg/service"
-	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/service"
+	mock_service "github.com/asavt7/nixedu/backend/mocks/pkg/service"
+	"github.com/asavt7/nixedu/backend/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/service"
 	"github.com/golang/mock/gomock"
 	"github.com/kinbiko/jsonassert"
 	"github.com/labstack/echo/v4"

@@ -2,7 +2,7 @@ package server
 
 import (
 	// added for swagger support
-	_ "github.com/asavt7/nixEducation/docs"
+	_ "github.com/asavt7/nixedu/backend/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"

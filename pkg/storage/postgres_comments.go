@@ -3,7 +3,7 @@ package storage
 import (
 	"errors"
 	"fmt"
-	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/model"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 )

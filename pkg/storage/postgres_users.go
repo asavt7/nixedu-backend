@@ -6,7 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/model"
 )
 
 // PostgresUserStorage - postgres UserStorage implementation

@@ -2,7 +2,7 @@ package storage
 
 import (
 	"fmt"
-	"github.com/asavt7/nixEducation/pkg/configs"
+	"github.com/asavt7/nixedu/backend/pkg/configs"
 	"github.com/jmoiron/sqlx"
 	"log"
 )

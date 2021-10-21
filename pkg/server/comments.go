@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/asavt7/nixEducation/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/model"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"

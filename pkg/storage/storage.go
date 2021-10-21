@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/asavt7/nixEducation/pkg/model"
+import "github.com/asavt7/nixedu/backend/pkg/model"
 
 type PostsStorage interface {
 	Save(p model.Post) (model.Post, error)

@@ -2,9 +2,9 @@ package service_test
 
 import (
 	"errors"
-	mockstorage "github.com/asavt7/nixEducation/mocks/pkg/storage"
-	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/service"
+	mockstorage "github.com/asavt7/nixedu/backend/mocks/pkg/storage"
+	"github.com/asavt7/nixedu/backend/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/service"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"

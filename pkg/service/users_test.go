@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
-	mock_storage "github.com/asavt7/nixEducation/mocks/pkg/storage"
-	"github.com/asavt7/nixEducation/pkg/model"
+	mock_storage "github.com/asavt7/nixedu/backend/mocks/pkg/storage"
+	"github.com/asavt7/nixedu/backend/pkg/model"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"

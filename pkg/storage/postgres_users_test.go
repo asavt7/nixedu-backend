@@ -2,8 +2,8 @@ package storage_test
 
 import (
 	"errors"
-	"github.com/asavt7/nixEducation/pkg/model"
-	"github.com/asavt7/nixEducation/pkg/storage"
+	"github.com/asavt7/nixedu/backend/pkg/model"
+	"github.com/asavt7/nixedu/backend/pkg/storage"
 	sqlmock "github.com/zhashkevych/go-sqlxmock"
 	"testing"
 )
