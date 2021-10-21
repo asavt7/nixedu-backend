@@ -11,7 +11,7 @@ type PostService interface {
 	GetAll() ([]model.Post, error)
 	GetAllByUserID(userID int) ([]model.Post, error)
 	GetByUserIDAndPostID(userID, postID int) (model.Post, error)
-	Save(userID int, post model.Post) (model.Post, error)
+	Save(post model.Post) (model.Post, error)
 	Update(userID, postID int, updatePost model.UpdatePost) (model.Post, error)
 	DeletePost(userID, postID int) error
 }

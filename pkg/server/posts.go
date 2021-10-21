@@ -77,7 +77,8 @@ func (h *APIHandler) createPost(context echo.Context) error {
 		return response(http.StatusUnauthorized, "unauthorized", context)
 	}
 
-	post, err := h.service.PostService.Save(userIDInt, *newPost)
+	newPost.UserID = currentUser
+	post, err := h.service.PostService.Save(*newPost)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:

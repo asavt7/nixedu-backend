@@ -14,17 +14,17 @@ func NewCommentServiceImpl(repo storage.CommentsStorage) *CommentServiceImpl {
 }
 
 func (c *CommentServiceImpl) GetAllByPostID(postID int) ([]model.Comment, error) {
-	panic("implement me")
+	return c.repo.GetAllByPostID(postID)
 }
 
 func (c *CommentServiceImpl) Save(comment model.Comment) (model.Comment, error) {
-	panic("implement me")
+	return c.repo.Save(comment)
 }
 
 func (c *CommentServiceImpl) Update(currentUserID, commentID int, comment model.UpdateComment) (model.Comment, error) {
-	panic("implement me")
+	return c.repo.Update(currentUserID, commentID, comment)
 }
 
 func (c *CommentServiceImpl) Delete(currentUserID, commentID int) error {
-	panic("implement me")
+	return c.repo.DeleteByUserIDAndID(currentUserID, commentID)
 }

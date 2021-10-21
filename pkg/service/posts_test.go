@@ -78,19 +78,19 @@ func TestPostServiceImpl_GetAllByUserID(t *testing.T) {
 func TestPostServiceImpl_GetByUserIdAndPostId(t *testing.T) {
 	postsService, postsStorage, finishFunc := initMocks(t)
 	defer finishFunc()
-	posts := []model.Post{{
+	post := model.Post{
 		UserID: 1,
 		ID:     1,
 		Title:  "title",
 		Body:   "body",
-	}}
+	}
 	t.Run("ok", func(t *testing.T) {
-		postsStorage.EXPECT().GetByUserIDAndID(1, 1).Return(posts, nil)
+		postsStorage.EXPECT().GetByUserIDAndID(1, 1).Return(post, nil)
 		actual, err := postsService.GetByUserIDAndPostID(1, 1)
 		if err != nil {
 			t.Errorf("err should be nil")
 		}
-		assert.Equal(t, posts, actual)
+		assert.Equal(t, post, actual)
 	})
 	t.Run("err", func(t *testing.T) {
 		postsStorage.EXPECT().GetByUserIDAndID(1, 1).Return(nil, errors.New("err"))
@@ -131,16 +131,16 @@ func TestPostServiceImpl_Save(t *testing.T) {
 		Body:   "body",
 	}
 	t.Run("ok", func(t *testing.T) {
-		postsStorage.EXPECT().Save(1, post).Return(post, nil)
-		actual, err := postsService.Save(1, post)
+		postsStorage.EXPECT().Save(post).Return(post, nil)
+		actual, err := postsService.Save(post)
 		if err != nil {
 			t.Errorf("err should be nil")
 		}
 		assert.Equal(t, post, actual)
 	})
 	t.Run("err", func(t *testing.T) {
-		postsStorage.EXPECT().Save(1, post).Return(post, errors.New("cannot save"))
-		_, err := postsService.Save(1, post)
+		postsStorage.EXPECT().Save(post).Return(post, errors.New("cannot save"))
+		_, err := postsService.Save(post)
 		if err == nil {
 			t.Errorf("err should not be nil")
 		}

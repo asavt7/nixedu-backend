@@ -16,25 +16,25 @@ func NewPostServiceImpl(repo storage.PostsStorage) *PostServiceImpl {
 }
 
 func (p *PostServiceImpl) GetAll() ([]model.Post, error) {
-	panic("implement me")
+	return p.repo.GetAll()
 }
 
 func (p *PostServiceImpl) GetAllByUserID(userID int) ([]model.Post, error) {
-	panic("implement me")
+	return p.repo.GetAllByUserID(userID)
 }
 
 func (p *PostServiceImpl) GetByUserIDAndPostID(userID, postID int) (model.Post, error) {
-	panic("implement me")
+	return p.repo.GetByUserIDAndID(userID, postID)
 }
 
-func (p *PostServiceImpl) Save(userID int, post model.Post) (model.Post, error) {
-	panic("implement me")
+func (p *PostServiceImpl) Save(post model.Post) (model.Post, error) {
+	return p.repo.Save(post)
 }
 
 func (p *PostServiceImpl) Update(userID, postID int, updatePost model.UpdatePost) (model.Post, error) {
-	panic("implement me")
+	return p.repo.Update(userID, postID, updatePost)
 }
 
 func (p *PostServiceImpl) DeletePost(userID, postID int) error {
-	panic("implement me")
+	return p.repo.DeleteByUserIDAndID(userID, postID)
 }

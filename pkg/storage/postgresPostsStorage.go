@@ -13,7 +13,7 @@ func (p *PostgresPostsStorage) GetAll() ([]model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) Save(userID int, post model.Post) (model.Post, error) {
+func (p *PostgresPostsStorage) Save(post model.Post) (model.Post, error) {
 	panic("implement me")
 }
 

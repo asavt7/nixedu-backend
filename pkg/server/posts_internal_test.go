@@ -39,9 +39,10 @@ func TestPostsHandler(t *testing.T) {
 	handler := NewAPIHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
-		postsService.EXPECT().Save(userID, model.Post{
-			Title: "title",
-			Body:  "body",
+		postsService.EXPECT().Save(model.Post{
+			UserID: userID,
+			Title:  "title",
+			Body:   "body",
 		}).Return(post, nil)
 
 		e := echo.New()
@@ -61,7 +62,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("create - bad request body", func(t *testing.T) {
-		postsService.EXPECT().Save(userID, model.Post{}).Times(0).Return(post, nil)
+		postsService.EXPECT().Save(model.Post{}).Times(0).Return(post, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{}`))
@@ -79,7 +80,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("create - not authorized", func(t *testing.T) {
-		postsService.EXPECT().Save(userID, model.Post{}).Times(0).Return(post, nil)
+		postsService.EXPECT().Save(model.Post{}).Times(0).Return(post, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{"title":"title","body":"body"}`))
@@ -130,7 +131,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(post, nil)
+		postsService.EXPECT().GetByUserIDAndPostID(userID, post.ID).Return(post, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -147,7 +148,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id - user not found", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(model.Post{}, model.UserNotFoundErr{Id: userID})
+		postsService.EXPECT().GetByUserIDAndPostID(userID, post.ID).Return(model.Post{}, model.UserNotFoundErr{Id: userID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -163,7 +164,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id - post not found", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(model.Post{}, model.PostNotFoundErr{Id: post.ID})
+		postsService.EXPECT().GetByUserIDAndPostID(userID, post.ID).Return(model.Post{}, model.PostNotFoundErr{Id: post.ID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

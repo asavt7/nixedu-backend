@@ -3,7 +3,7 @@ package storage
 import "github.com/asavt7/nixEducation/pkg/model"
 
 type PostsStorage interface {
-	Save(userID int, p model.Post) (model.Post, error)
+	Save(p model.Post) (model.Post, error)
 	GetAll() ([]model.Post, error)
 	GetAllByUserID(userID int) ([]model.Post, error)
 	GetByUserIDAndID(userID, postID int) (model.Post, error)
