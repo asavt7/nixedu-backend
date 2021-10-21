@@ -9,6 +9,7 @@ const (
 	usersTable = "nix.users"
 )
 
+// PostgresStorage - postgres storage implementation
 type PostgresStorage struct {
 	db *sqlx.DB
 	PostsStorage
@@ -16,6 +17,7 @@ type PostgresStorage struct {
 	UserStorage
 }
 
+// NewPostgresStorage constructs PostgresStorage instance
 func NewPostgresStorage(db *sqlx.DB) *Storage {
 
 	return &Storage{

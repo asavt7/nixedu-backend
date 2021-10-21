@@ -44,7 +44,7 @@ func TestPostgresUserStorage_Create(t *testing.T) {
 				mock.ExpectQuery("INSERT INTO nix.users \\(username,email,password_hash\\) values").WithArgs("username", "email@googlle.com", "password").WillReturnRows(rows)
 			},
 			want: model.User{
-				Id:           1,
+				ID:           1,
 				Username:     "username",
 				Email:        "email@googlle.com",
 				PasswordHash: "password",
@@ -107,7 +107,7 @@ func TestPostgresUserStorage_FindByEmail(t *testing.T) {
 			name: "OK",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -121,7 +121,7 @@ func TestPostgresUserStorage_FindByEmail(t *testing.T) {
 			name: "no user found",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -165,7 +165,7 @@ func TestPostgresUserStorage_GetById(t *testing.T) {
 			name: "OK",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -179,7 +179,7 @@ func TestPostgresUserStorage_GetById(t *testing.T) {
 			name: "no user found",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -195,8 +195,8 @@ func TestPostgresUserStorage_GetById(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
-			got, err := tt.s.GetById(tt.user.Id)
-			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: tt.user.Id}) {
+			got, err := tt.s.GetById(tt.user.ID)
+			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: tt.user.ID}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
@@ -222,7 +222,7 @@ func TestPostgresUserStorage_FindByUsername(t *testing.T) {
 			name: "OK",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -236,7 +236,7 @@ func TestPostgresUserStorage_FindByUsername(t *testing.T) {
 			name: "no user found",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -279,7 +279,7 @@ func TestPostgresUserStorage_GetByUsernameAndPasswordHash(t *testing.T) {
 			name: "OK",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",
@@ -293,7 +293,7 @@ func TestPostgresUserStorage_GetByUsernameAndPasswordHash(t *testing.T) {
 			name: "no user found",
 			s:    repo,
 			user: model.User{
-				Id:           1,
+				ID:           1,
 				Email:        "email@googlle.com",
 				Username:     "username",
 				PasswordHash: "password",

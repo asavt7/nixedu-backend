@@ -5,14 +5,16 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type ApiHandler struct {
+// APIHandler handler
+type APIHandler struct {
 	service *service.Service
 
 	validator *validator.Validate
 }
 
-func NewApiHandler(service *service.Service) *ApiHandler {
-	return &ApiHandler{
+// NewAPIHandler constructs APIHandler
+func NewAPIHandler(service *service.Service) *APIHandler {
+	return &APIHandler{
 		service:   service,
 		validator: validator.New(),
 	}

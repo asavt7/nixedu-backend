@@ -2,7 +2,6 @@ package storage
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
@@ -10,10 +9,12 @@ import (
 	"github.com/asavt7/nixEducation/pkg/model"
 )
 
+// PostgresUserStorage - postgres UserStorage implementation
 type PostgresUserStorage struct {
 	db *sqlx.DB
 }
 
+// FindByUsername - FindByUsername
 func (p *PostgresUserStorage) FindByUsername(username string) (model.User, error) {
 	var user model.User
 
@@ -29,6 +30,7 @@ func (p *PostgresUserStorage) FindByUsername(username string) (model.User, error
 
 }
 
+// FindByEmail FindByEmail
 func (p *PostgresUserStorage) FindByEmail(email string) (model.User, error) {
 	var user model.User
 
@@ -43,6 +45,7 @@ func (p *PostgresUserStorage) FindByEmail(email string) (model.User, error) {
 	return user, err
 }
 
+// GetByUsernameAndPasswordHash - GetByUsernameAndPasswordHash
 func (p *PostgresUserStorage) GetByUsernameAndPasswordHash(username, passwordHash string) (model.User, error) {
 	var user model.User
 
@@ -53,11 +56,12 @@ func (p *PostgresUserStorage) GetByUsernameAndPasswordHash(username, passwordHas
 	}
 	if err != nil {
 		log.Error(err.Error())
-		errors.New(fmt.Sprintf("cannot find user by username=%s and password", username))
+		return model.User{}, fmt.Errorf("cannot find user by username=%s and password", username)
 	}
 	return user, err
 }
 
+// Create - insert new user in DB
 func (p *PostgresUserStorage) Create(user model.User) (model.User, error) {
 	var id int
 
@@ -65,13 +69,14 @@ func (p *PostgresUserStorage) Create(user model.User) (model.User, error) {
 	err := p.db.Get(&id, query, user.Username, user.Email, user.PasswordHash)
 	if err != nil {
 		log.Error(err.Error())
-		return user, errors.New(fmt.Sprintf("cannot create user username=%s email=%s", user.Username, user.Email))
+		return user, fmt.Errorf("cannot create user username=%s email=%s", user.Username, user.Email)
 	}
-	user.Id = id
+	user.ID = id
 	return user, nil
 
 }
 
+// GetById - GetById
 func (p *PostgresUserStorage) GetById(userId int) (model.User, error) {
 	var user model.User
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)

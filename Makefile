@@ -58,4 +58,10 @@ docker-compose:
 swagger:
 	swag init  --dir ./cmd,./pkg --parseInternal true
 
+
+.PHONY: docs
+docs:
+	@echo  'link to docs  http://localhost:6060/pkg/github.com/asavt7/nixEducation/'
+	godoc -http=:6060
+
 .DEFAULT_GOAL := build

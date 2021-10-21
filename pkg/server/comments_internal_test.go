@@ -46,7 +46,7 @@ func TestCommentsHandler(t *testing.T) {
 	mockService := &service.Service{
 		CommentService: commentService,
 	}
-	handler := NewApiHandler(mockService)
+	handler := NewAPIHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
 		commentService.EXPECT().Save(postID, model.Comment{
@@ -103,7 +103,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
 		c.Set(currentUserID, 1111)
 
-		if assert.NoError(t, handler.getCommentsByPostId(c)) {
+		if assert.NoError(t, handler.getCommentsByPostID(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			jsonassert.New(t).Assertf(rec.Body.String(), string(expectedCommentsJSON))
 		}
@@ -122,7 +122,7 @@ func TestCommentsHandler(t *testing.T) {
 		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(postID))
 		c.Set(currentUserID, 1111)
 
-		if assert.NoError(t, handler.getCommentsByPostId(c)) {
+		if assert.NoError(t, handler.getCommentsByPostID(c)) {
 			assert.Equal(t, http.StatusNotFound, rec.Code)
 		}
 	})

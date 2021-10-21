@@ -33,7 +33,7 @@ type signInResponse struct {
 // @Failure 400 {object} message
 // @Failure 500 {object} message
 // @Router /sign-in [post]
-func (h *ApiHandler) signIn(c echo.Context) error {
+func (h *APIHandler) signIn(c echo.Context) error {
 	u := new(signInUserInput)
 	if err := c.Bind(u); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -54,7 +54,7 @@ func (h *ApiHandler) signIn(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Password or Username is incorrect")
 	}
 
-	accessToken, refreshToken, err := h.generateTokensAndSetCookies(user.Id, c)
+	accessToken, refreshToken, err := h.generateTokensAndSetCookies(user.ID, c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Token is incorrect")
 	}
@@ -65,7 +65,7 @@ func (h *ApiHandler) signIn(c echo.Context) error {
 	}, c)
 }
 
-func (h *ApiHandler) generateTokensAndSetCookies(userID int, c echo.Context) (accessToken, refreshToken string, err error) {
+func (h *APIHandler) generateTokensAndSetCookies(userID int, c echo.Context) (accessToken, refreshToken string, err error) {
 	accessToken, refreshToken, accessExp, refreshExp, err := h.service.AuthorizationService.GenerateTokens(userID)
 	if err != nil {
 		return accessToken, refreshToken, err
@@ -77,7 +77,7 @@ func (h *ApiHandler) generateTokensAndSetCookies(userID int, c echo.Context) (ac
 	return accessToken, refreshToken, nil
 }
 
-func (h *ApiHandler) setTokenCookie(name, token string, expiration time.Time, c echo.Context) {
+func (h *APIHandler) setTokenCookie(name, token string, expiration time.Time, c echo.Context) {
 	cookie := new(http.Cookie)
 	cookie.Name = name
 	cookie.Value = token
@@ -89,7 +89,7 @@ func (h *ApiHandler) setTokenCookie(name, token string, expiration time.Time, c 
 	c.SetCookie(cookie)
 }
 
-func (h *ApiHandler) setUserCookie(userID string, expiration time.Time, c echo.Context) {
+func (h *APIHandler) setUserCookie(userID string, expiration time.Time, c echo.Context) {
 	cookie := new(http.Cookie)
 	cookie.Name = "userId"
 	cookie.Value = userID
@@ -115,7 +115,7 @@ type signUpUserInput struct {
 // @Failure 400 {object} message
 // @Failure 500 {object} message
 // @Router /sign-up [post]
-func (h *ApiHandler) signUp(c echo.Context) error {
+func (h *APIHandler) signUp(c echo.Context) error {
 	u := new(signUpUserInput)
 	if err := c.Bind(u); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -134,7 +134,7 @@ func (h *ApiHandler) signUp(c echo.Context) error {
 	return response(http.StatusCreated, createdUser, c)
 }
 
-func (h *ApiHandler) loginPage(context echo.Context) error {
+func (h *APIHandler) loginPage(context echo.Context) error {
 	var htmlLoginForm = `<html>
 <body>
 <center> <h1> Login Form </h1> </center>   

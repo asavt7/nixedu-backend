@@ -23,12 +23,12 @@ func init() {
 	googleOauthConfig = configs.InitGoogleOAuthConfigs()
 }
 
-func (h *ApiHandler) handleGoogleLogin(context echo.Context) error {
+func (h *APIHandler) handleGoogleLogin(context echo.Context) error {
 	url := googleOauthConfig.AuthCodeURL(oauthStateString)
 	return context.Redirect(http.StatusTemporaryRedirect, url)
 }
 
-func (h *ApiHandler) handleGoogleCallback(c echo.Context) error {
+func (h *APIHandler) handleGoogleCallback(c echo.Context) error {
 	content, err := getUserInfo(c.FormValue("state"), c.FormValue("code"))
 	if err != nil {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -48,7 +48,7 @@ func (h *ApiHandler) handleGoogleCallback(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	_, _, err = h.generateTokensAndSetCookies(gotUser.Id, c)
+	_, _, err = h.generateTokensAndSetCookies(gotUser.ID, c)
 	if err != nil {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -61,7 +61,7 @@ func generateUniqUsername(email string, name string) string {
 	return name + "_" + base64.URLEncoding.EncodeToString([]byte(email))
 }
 
-func (h *ApiHandler) getUserByEmailOrCreateIfNotExists(email, username string) (model.User, error) {
+func (h *APIHandler) getUserByEmailOrCreateIfNotExists(email, username string) (model.User, error) {
 	u, err := h.service.UserService.GetUserByEmail(email)
 	if err != nil {
 		switch err.(type) {

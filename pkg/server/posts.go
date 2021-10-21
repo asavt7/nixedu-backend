@@ -21,7 +21,7 @@ import (
 // @Router /api/v1/users/{userId}/posts [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) getUserPosts(context echo.Context) error {
+func (h *APIHandler) getUserPosts(context echo.Context) error {
 	userID := context.Param("userId")
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
@@ -56,7 +56,7 @@ func (h *ApiHandler) getUserPosts(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) createPost(context echo.Context) error {
+func (h *APIHandler) createPost(context echo.Context) error {
 
 	userID := context.Param("userId")
 	userIDInt, err := strconv.Atoi(userID)
@@ -105,7 +105,7 @@ func (h *ApiHandler) createPost(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId} [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) getUserPostByID(context echo.Context) error {
+func (h *APIHandler) getUserPostByID(context echo.Context) error {
 
 	userID := context.Param("userId")
 	userIDInt, err := strconv.Atoi(userID)
@@ -146,7 +146,7 @@ func (h *ApiHandler) getUserPostByID(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) deletePost(context echo.Context) error {
+func (h *APIHandler) deletePost(context echo.Context) error {
 	userID := context.Param("userId")
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
@@ -191,7 +191,7 @@ func (h *ApiHandler) deletePost(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId} [put]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) updatePost(context echo.Context) error {
+func (h *APIHandler) updatePost(context echo.Context) error {
 	userID := context.Param("userId")
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {

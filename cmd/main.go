@@ -31,7 +31,7 @@ func main() {
 	tokenStore := tokenstorage.NewTokenStorage(redisCacheStore, 10*time.Minute)
 
 	srvc := service.NewService(store, tokenStore)
-	handler := server.NewApiHandler(srvc)
-	srvr := server.NewApiServer(handler)
+	handler := server.NewAPIHandler(srvc)
+	srvr := server.NewAPIServer(handler)
 	srvr.Run()
 }

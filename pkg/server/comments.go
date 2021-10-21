@@ -23,7 +23,7 @@ import (
 // @Router /api/v1/users/{userId}/posts/{postId}/comments [post]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) createComment(context echo.Context) error {
+func (h *APIHandler) createComment(context echo.Context) error {
 
 	postID := context.Param("postId")
 	postIDInt, err := strconv.Atoi(postID)
@@ -55,11 +55,11 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 	return response(http.StatusCreated, post, context)
 }
 
-// getCommentsByPostId godoc
+// getCommentsByPostID godoc
 // @Tags comments
-// @Summary getCommentsByPostId
-// @Description getCommentsByPostId
-// @ID getCommentsByPostId
+// @Summary getCommentsByPostID
+// @Description getCommentsByPostID
+// @ID getCommentsByPostID
 // @Accept  json,xml
 // @Produce  json,xml
 // @Param userId path int true "userId"
@@ -70,7 +70,7 @@ func (h *ApiHandler) createComment(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId}/comments [get]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
+func (h *APIHandler) getCommentsByPostID(context echo.Context) error {
 	postID := context.Param("postId")
 	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
@@ -105,7 +105,7 @@ func (h *ApiHandler) getCommentsByPostId(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId}/comments/{commentId} [delete]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) deleteComment(context echo.Context) error {
+func (h *APIHandler) deleteComment(context echo.Context) error {
 
 	commentID := context.Param("commentId")
 	commentIDInt, err := strconv.Atoi(commentID)
@@ -146,7 +146,7 @@ func (h *ApiHandler) deleteComment(context echo.Context) error {
 // @Router /api/v1/users/{userId}/posts/{postId}/comments/{commentId} [put]
 // @Security ApiKeyAuth
 // @param Authorization header string true "Authorization"
-func (h *ApiHandler) updateComment(context echo.Context) error {
+func (h *APIHandler) updateComment(context echo.Context) error {
 
 	commentID := context.Param("commentId")
 	commentIDInt, err := strconv.Atoi(commentID)

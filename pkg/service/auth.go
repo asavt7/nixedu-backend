@@ -17,21 +17,21 @@ const (
 	refreshTime         = 15 * time.Minute
 	accessTokenTTL      = 1 * time.Hour
 	refreshTokenTTL     = 12 * time.Hour
-
-	salt = "some_salt_from_configs" //todo
 )
 
+// GetRefreshJWTSecret returns secret for refresh tokens
 func GetRefreshJWTSecret() string {
 	return jwtRefreshSecretKey
 }
 
+// GetJWTSecret returns secret for access tokens
 func GetJWTSecret() string {
 	return jwtSecretKey
 }
 
 type Claims struct {
 	UserID int    `json:"userId"`
-	Uuid   string `json:"uuid"`
+	UID    string `json:"uid"`
 	jwt.StandardClaims
 }
 
@@ -59,7 +59,7 @@ func (s *AuthorizationServiceImpl) ValidateAccessToken(accessTokenClaims *Claims
 
 func (s *AuthorizationServiceImpl) validateToken(accessTokenClaims *Claims, tokenFromCashedFunc func(model.CachedTokens) string) error {
 	userId := accessTokenClaims.UserID
-	clientTokenUuid := accessTokenClaims.Uuid
+	clientTokenUuid := accessTokenClaims.UID
 
 	cached, err := s.tokenStore.Get(userId)
 	if err != nil {
@@ -71,6 +71,7 @@ func (s *AuthorizationServiceImpl) validateToken(accessTokenClaims *Claims, toke
 	return nil
 }
 
+// CheckUserCredentials
 func (s *AuthorizationServiceImpl) CheckUserCredentials(username string, password string) (model.User, error) {
 	user, err := s.repo.FindByUsername(username)
 	if err != nil {
@@ -109,17 +110,18 @@ func (s *AuthorizationServiceImpl) parseTokenToClaims(token string, key []byte) 
 	return tkn.Claims.(*Claims), nil
 }
 
+// GenerateTokens GenerateTokens
 func (s *AuthorizationServiceImpl) GenerateTokens(userID int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error) {
-	accessToken, accessUuid, accessExp, err := generateToken(userID, time.Now().Add(accessTokenTTL), []byte(GetJWTSecret()))
-	refreshToken, refreshUuid, refreshExp, err := generateToken(userID, time.Now().Add(refreshTokenTTL), []byte(GetRefreshJWTSecret()))
+	accessToken, accessUID, accessExp, err := generateToken(userID, time.Now().Add(accessTokenTTL), []byte(GetJWTSecret()))
+	refreshToken, refreshUID, refreshExp, err := generateToken(userID, time.Now().Add(refreshTokenTTL), []byte(GetRefreshJWTSecret()))
 
 	if err != nil {
 		return
 	}
 
 	cashedTokens := model.CachedTokens{
-		AccessUID:  accessUuid,
-		RefreshUID: refreshUuid,
+		AccessUID:  accessUID,
+		RefreshUID: refreshUID,
 	}
 	_, err = s.tokenStore.Save(userID, cashedTokens)
 
@@ -127,10 +129,10 @@ func (s *AuthorizationServiceImpl) GenerateTokens(userID int) (accessToken, refr
 }
 
 func generateToken(userID int, expirationTime time.Time, secret []byte) (string, string, time.Time, error) {
-	tokenUuid := uuid.New().String()
+	tokenUID := uuid.New().String()
 	claims := &Claims{
 		UserID: userID,
-		Uuid:   tokenUuid,
+		UID:    tokenUID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -140,10 +142,10 @@ func generateToken(userID int, expirationTime time.Time, secret []byte) (string,
 
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
-		return "", tokenUuid, time.Now(), err
+		return "", tokenUID, time.Now(), err
 	}
 
-	return tokenString, tokenUuid, expirationTime, nil
+	return tokenString, tokenUID, expirationTime, nil
 }
 
 func hashPassword(password string) (string, error) {

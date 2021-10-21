@@ -38,8 +38,8 @@ func (p *PostgresPostsStorage) Save(post model.Post) (model.Post, error) {
 	sqlStatement :=
 		`INSERT INTO nix.posts (id, UserId, Title, Body) VALUES ($1, $2, $3, $4) returning *`
 
-	res := p.db.QueryRow(sqlStatement, post.Id, post.UserId, post.Title, post.Body)
-	err := res.Scan(&post.Id, &post.UserId, &post.Title, &post.Body)
+	res := p.db.QueryRow(sqlStatement, post.ID, post.UserId, post.Title, post.Body)
+	err := res.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
 	if err != nil {
 		return model.Post{}, err
 	}

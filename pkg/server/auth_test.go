@@ -90,18 +90,18 @@ func TestSignUp(t *testing.T) {
 		CommentService:       nil,
 	}
 
-	srv := server.NewApiServer(server.NewApiHandler(mockService))
+	srv := server.NewAPIServer(server.NewAPIHandler(mockService))
 	defer srv.Echo.Close()
 
 	t.Run("signUp ok", func(t *testing.T) {
 		createdUser := model.User{
-			Id:           createduserIDInt,
+			ID:           createduserIDInt,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "hash",
 		}
 		userService.EXPECT().CreateUser(model.User{
-			Id:           1,
+			ID:           1,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "",
@@ -120,13 +120,13 @@ func TestSignUp(t *testing.T) {
 
 	t.Run("signUp ok", func(t *testing.T) {
 		createdUser := model.User{
-			Id:           createduserIDInt,
+			ID:           createduserIDInt,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "hash",
 		}
 		userService.EXPECT().CreateUser(model.User{
-			Id:           1,
+			ID:           1,
 			Username:     username,
 			Email:        email,
 			PasswordHash: "",
@@ -155,7 +155,7 @@ func assertXmlResponseSignUp(t *testing.T, s string) {
 	}
 	assert.Equal(t, username, u.Username)
 	assert.Equal(t, email, u.Email)
-	assert.Equal(t, createduserIDInt, u.Id)
+	assert.Equal(t, createduserIDInt, u.ID)
 
 }
 
@@ -173,14 +173,14 @@ func TestSignIn(t *testing.T) {
 		CommentService:       nil,
 	}
 
-	srv := server.NewApiServer(server.NewApiHandler(mockService))
+	srv := server.NewAPIServer(server.NewAPIHandler(mockService))
 	defer srv.Echo.Close()
 
 	userId := 1
 	accessToken := "accessToken"
 	refreshToken := "refreshToken"
 	user := model.User{
-		Id:           userId,
+		ID:           userId,
 		Username:     username,
 		Email:        email,
 		PasswordHash: password,

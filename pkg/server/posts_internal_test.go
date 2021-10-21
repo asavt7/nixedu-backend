@@ -36,7 +36,7 @@ func TestPostsHandler(t *testing.T) {
 	mockService := &service.Service{
 		PostService: postsService,
 	}
-	handler := NewApiHandler(mockService)
+	handler := NewAPIHandler(mockService)
 
 	t.Run("create - ok", func(t *testing.T) {
 		postsService.EXPECT().Save(userID, model.Post{

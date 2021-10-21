@@ -29,6 +29,7 @@ type UserService interface {
 	GetUserByEmail(email string) (model.User, error)
 }
 
+// AuthorizationService interface contains methods for working with tokens
 type AuthorizationService interface {
 	CheckUserCredentials(username string, password string) (model.User, error)
 	GenerateTokens(userId int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error)

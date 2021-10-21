@@ -9,15 +9,15 @@ import (
 
 const apiPath = "/api/v1"
 
-// ApiServer struct
-type ApiServer struct {
+// APIServer struct
+type APIServer struct {
 	Echo    *echo.Echo
-	handler *ApiHandler
+	handler *APIHandler
 }
 
-// NewApiServer constructs ApiServer
-func NewApiServer(handler *ApiHandler) *ApiServer {
-	s := &ApiServer{
+// NewAPIServer constructs APIServer
+func NewAPIServer(handler *APIHandler) *APIServer {
+	s := &APIServer{
 		Echo:    echo.New(),
 		handler: handler,
 	}
@@ -25,7 +25,7 @@ func NewApiServer(handler *ApiHandler) *ApiServer {
 	return s
 }
 
-func (srv *ApiServer) initRoutes() {
+func (srv *APIServer) initRoutes() {
 	srv.Echo.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
@@ -42,29 +42,29 @@ func (srv *ApiServer) initRoutes() {
 
 	srv.Echo.GET("/health", healthCheck)
 
-	api := srv.Echo.Group(apiPath)
+	API := srv.Echo.Group(apiPath)
 
-	api.Use(parseAccessToken(), srv.handler.tokenRefresherMiddleware)
+	API.Use(parseAccessToken(), srv.handler.tokenRefresherMiddleware)
 
-	usersApi := api.Group("/users/:userId")
+	usersAPI := API.Group("/users/:userId")
 
-	usersApi.GET("/posts", srv.handler.getUserPosts)
-	usersApi.POST("/posts", srv.handler.createPost)
+	usersAPI.GET("/posts", srv.handler.getUserPosts)
+	usersAPI.POST("/posts", srv.handler.createPost)
 
-	usersApi.GET("/posts/:postId", srv.handler.getUserPostByID)
-	usersApi.DELETE("/posts/:postId", srv.handler.deletePost)
-	usersApi.PUT("/posts/:postId", srv.handler.updatePost)
+	usersAPI.GET("/posts/:postId", srv.handler.getUserPostByID)
+	usersAPI.DELETE("/posts/:postId", srv.handler.deletePost)
+	usersAPI.PUT("/posts/:postId", srv.handler.updatePost)
 
-	usersApi.GET("/posts/:postId/comments", srv.handler.getCommentsByPostId)
-	usersApi.POST("/posts/:postId/comments", srv.handler.createComment)
+	usersAPI.GET("/posts/:postId/comments", srv.handler.getCommentsByPostID)
+	usersAPI.POST("/posts/:postId/comments", srv.handler.createComment)
 
-	usersApi.DELETE("/posts/:postId/comments/:commentId", srv.handler.deleteComment)
-	usersApi.PUT("/posts/:postId/comments/:commentId", srv.handler.updateComment)
+	usersAPI.DELETE("/posts/:postId/comments/:commentId", srv.handler.deleteComment)
+	usersAPI.PUT("/posts/:postId/comments/:commentId", srv.handler.updateComment)
 
 }
 
 // Run method run server or fail app
-func (srv *ApiServer) Run() {
+func (srv *APIServer) Run() {
 
 	srv.Echo.Logger.Fatal(srv.Echo.Start(":8080"))
 

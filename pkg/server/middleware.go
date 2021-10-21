@@ -13,7 +13,7 @@ func parseAccessToken() echo.MiddlewareFunc {
 		Claims:                  &service.Claims{},
 		SigningKey:              []byte(service.GetJWTSecret()),
 		TokenLookup:             "header: Authorization,cookie:" + accessTokenCookieName,
-		ErrorHandlerWithContext: JWTErrorChecker,
+		ErrorHandlerWithContext: jwtErrorChecker,
 		SuccessHandler: func(c echo.Context) {
 			tok := c.Get("user")
 			accessToken := tok.(*jwt.Token)
@@ -24,7 +24,7 @@ func parseAccessToken() echo.MiddlewareFunc {
 	})
 }
 
-func (h *ApiHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+func (h *APIHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		tok := c.Get("user")
@@ -70,6 +70,6 @@ func (h *ApiHandler) tokenRefresherMiddleware(next echo.HandlerFunc) echo.Handle
 	}
 }
 
-func JWTErrorChecker(err error, _ echo.Context) error {
+func jwtErrorChecker(err error, _ echo.Context) error {
 	return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 }
