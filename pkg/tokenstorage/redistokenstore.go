@@ -31,9 +31,9 @@ func NewRedisTokenStore(client *redis.Client, autoLogoffMinutes time.Duration) *
 	return &RedisTokenStore{client: client, AutoLogoffMinutes: autoLogoffMinutes}
 }
 
-func (r *RedisTokenStore) Get(userId int) (model.CachedTokens, error) {
+func (r *RedisTokenStore) Get(userID int) (model.CachedTokens, error) {
 
-	key := fmt.Sprintf("token-%s", strconv.Itoa(userId))
+	key := fmt.Sprintf("token-%s", strconv.Itoa(userID))
 	res, err := r.client.Get(context.Background(), key).Result()
 	if err != nil {
 		return model.CachedTokens{}, err
@@ -49,13 +49,13 @@ func (r *RedisTokenStore) Get(userId int) (model.CachedTokens, error) {
 	return *cachedTokens, err
 }
 
-func (r *RedisTokenStore) Delete(userId int) error {
-	key := fmt.Sprintf("token-%s", strconv.Itoa(userId))
+func (r *RedisTokenStore) Delete(userID int) error {
+	key := fmt.Sprintf("token-%s", strconv.Itoa(userID))
 	return r.client.Del(context.Background(), key).Err()
 }
 
-func (r *RedisTokenStore) Save(userId int, tokens model.CachedTokens) (model.CachedTokens, error) {
-	key := fmt.Sprintf("token-%s", strconv.Itoa(userId))
+func (r *RedisTokenStore) Save(userID int, tokens model.CachedTokens) (model.CachedTokens, error) {
+	key := fmt.Sprintf("token-%s", strconv.Itoa(userID))
 	cacheJSON, err := json.Marshal(tokens)
 	if err != nil {
 		return tokens, err

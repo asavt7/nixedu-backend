@@ -18,7 +18,7 @@ func NewTokenStorage(client *redis.Client, autoLogoffMinutes time.Duration) *Tok
 
 // TokenKeeper interface provides methods for storing model.CachedTokens in cache
 type TokenKeeper interface {
-	Get(userId int) (model.CachedTokens, error)
-	Delete(userId int) error
-	Save(userId int, tokens model.CachedTokens) (model.CachedTokens, error)
+	Get(userID int) (model.CachedTokens, error)
+	Delete(userID int) error
+	Save(userID int, tokens model.CachedTokens) (model.CachedTokens, error)
 }

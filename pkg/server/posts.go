@@ -28,7 +28,7 @@ func (h *APIHandler) getUserPosts(context echo.Context) error {
 		return response(http.StatusBadRequest, "missing or incorrect userId param, expected int", context)
 	}
 
-	posts, err := h.service.PostService.GetAllByUserId(userIDInt)
+	posts, err := h.service.PostService.GetAllByUserID(userIDInt)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr:
@@ -118,7 +118,7 @@ func (h *APIHandler) getUserPostByID(context echo.Context) error {
 		return response(http.StatusBadRequest, "missing or incorrect postId param, expected int", context)
 	}
 
-	post, err := h.service.PostService.GetByUserIdAndPostId(userIDInt, postIDInt)
+	post, err := h.service.PostService.GetByUserIDAndPostID(userIDInt, postIDInt)
 	if err != nil {
 		switch err.(type) {
 		case model.UserNotFoundErr, model.PostNotFoundErr:

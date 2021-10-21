@@ -195,7 +195,7 @@ func TestPostgresUserStorage_GetById(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
-			got, err := tt.s.GetById(tt.user.ID)
+			got, err := tt.s.GetByID(tt.user.ID)
 			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: tt.user.ID}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -43,7 +43,7 @@ func (r *RemoteService) GetAllByPostId(id int) ([]model.Comment, error) {
 	return comments, nil
 }
 
-func (r *RemoteService) GetAllByUserId(userId int) ([]model.Post, error) {
+func (r *RemoteService) GetAllByUserId(userID int) ([]model.Post, error) {
 	nu := r.remoteUrl
 	nu.Path = path.Join(r.remoteUrl.Path, "posts")
 
@@ -53,7 +53,7 @@ func (r *RemoteService) GetAllByUserId(userId int) ([]model.Post, error) {
 	}
 
 	q := req.URL.Query()
-	q.Add("userId", strconv.Itoa(userId))
+	q.Add("userId", strconv.Itoa(userID))
 	req.URL.RawQuery = q.Encode()
 
 	response, err := r.client.Do(req)
@@ -120,7 +120,7 @@ func (r *RemoteService) GetAll() ([]model.Post, error) {
 	}
 
 	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].Id < posts[j].Id
+		return posts[i].ID < posts[j].ID
 	})
 
 	return posts, nil

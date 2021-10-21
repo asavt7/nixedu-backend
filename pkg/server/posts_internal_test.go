@@ -19,7 +19,7 @@ import (
 func TestPostsHandler(t *testing.T) {
 
 	userID := 1
-	post := model.Post{UserId: userID, Id: 1, Title: "title", Body: "body"}
+	post := model.Post{UserID: userID, ID: 1, Title: "title", Body: "body"}
 	posts := []model.Post{post}
 	expectedPostsJSON, err := json.Marshal(posts)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get all user posts", func(t *testing.T) {
-		postsService.EXPECT().GetAllByUserId(userID).Return(posts, nil)
+		postsService.EXPECT().GetAllByUserID(userID).Return(posts, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -114,7 +114,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get all user posts - user not found", func(t *testing.T) {
-		postsService.EXPECT().GetAllByUserId(userID).Return(nil, model.UserNotFoundErr{Id: userID})
+		postsService.EXPECT().GetAllByUserID(userID).Return(nil, model.UserNotFoundErr{Id: userID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -130,7 +130,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.Id).Return(post, nil)
+		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(post, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -138,7 +138,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 
 		if assert.NoError(t, handler.getUserPostByID(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
@@ -147,7 +147,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id - user not found", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.Id).Return(model.Post{}, model.UserNotFoundErr{Id: userID})
+		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(model.Post{}, model.UserNotFoundErr{Id: userID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -155,7 +155,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 
 		if assert.NoError(t, handler.getUserPostByID(c)) {
 			assert.Equal(t, http.StatusNotFound, rec.Code)
@@ -163,7 +163,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("get user post by id - post not found", func(t *testing.T) {
-		postsService.EXPECT().GetByUserIdAndPostId(userID, post.Id).Return(model.Post{}, model.PostNotFoundErr{Id: post.Id})
+		postsService.EXPECT().GetByUserIdAndPostId(userID, post.ID).Return(model.Post{}, model.PostNotFoundErr{Id: post.ID})
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -171,7 +171,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 
 		if assert.NoError(t, handler.getUserPostByID(c)) {
 			assert.Equal(t, http.StatusNotFound, rec.Code)
@@ -179,7 +179,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("update - ok", func(t *testing.T) {
-		postsService.EXPECT().Update(userID, post.Id, model.UpdatePost{
+		postsService.EXPECT().Update(userID, post.ID, model.UpdatePost{
 			Title: &post.Title,
 			Body:  &post.Body,
 		}).Return(post, nil)
@@ -191,7 +191,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updatePost(c)) {
@@ -201,7 +201,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("update - bad request - empty body", func(t *testing.T) {
-		postsService.EXPECT().Update(userID, post.Id, model.UpdatePost{
+		postsService.EXPECT().Update(userID, post.ID, model.UpdatePost{
 			Title: nil,
 			Body:  nil,
 		}).Times(0).Return(post, nil)
@@ -213,7 +213,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.updatePost(c)) {
@@ -222,7 +222,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("update - unauthorized", func(t *testing.T) {
-		postsService.EXPECT().Update(userID, post.Id, model.UpdatePost{
+		postsService.EXPECT().Update(userID, post.ID, model.UpdatePost{
 			Title: &post.Title,
 			Body:  &post.Body,
 		}).Times(0).Return(post, nil)
@@ -234,7 +234,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 		c.Set(currentUserID, 111111)
 
 		if assert.NoError(t, handler.updatePost(c)) {
@@ -243,7 +243,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - ok", func(t *testing.T) {
-		postsService.EXPECT().DeletePost(userID, post.Id).Return(nil)
+		postsService.EXPECT().DeletePost(userID, post.ID).Return(nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
@@ -252,7 +252,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 		c.Set(currentUserID, userID)
 
 		if assert.NoError(t, handler.deletePost(c)) {
@@ -261,7 +261,7 @@ func TestPostsHandler(t *testing.T) {
 	})
 
 	t.Run("delete - unauthorized", func(t *testing.T) {
-		postsService.EXPECT().DeletePost(userID, post.Id).Times(0).Return(nil)
+		postsService.EXPECT().DeletePost(userID, post.ID).Times(0).Return(nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
@@ -270,7 +270,7 @@ func TestPostsHandler(t *testing.T) {
 		c := e.NewContext(req, rec)
 		c.SetPath("/users/:userId/posts/:postId")
 		c.SetParamNames("userId", "postId")
-		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.Id))
+		c.SetParamValues(strconv.Itoa(userID), strconv.Itoa(post.ID))
 		c.Set(currentUserID, 111111)
 
 		if assert.NoError(t, handler.deletePost(c)) {

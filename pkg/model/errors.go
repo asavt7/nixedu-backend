@@ -28,9 +28,9 @@ func (err UserNotFoundErr) Error() string {
 
 type UserHasNoAccessToChangeComment struct {
 	UserId    int
-	CommentId int
+	commentID int
 }
 
 func (err UserHasNoAccessToChangeComment) Error() string {
-	return fmt.Sprintf("user id=%d cannot change comment id=%d", err.UserId, err.CommentId)
+	return fmt.Sprintf("user id=%d cannot change comment id=%d", err.UserId, err.commentID)
 }

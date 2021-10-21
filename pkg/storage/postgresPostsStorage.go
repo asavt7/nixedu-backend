@@ -9,27 +9,27 @@ type PostgresPostsStorage struct {
 	db *sqlx.DB
 }
 
-func (p *PostgresPostsStorage) SaveAll(userId int, posts []model.Post) ([]model.Post, error) {
+func (p *PostgresPostsStorage) GetAll() ([]model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) Save(userId int, post model.Post) (model.Post, error) {
+func (p *PostgresPostsStorage) Save(userID int, post model.Post) (model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) GetAllByUserId(userId int) ([]model.Post, error) {
+func (p *PostgresPostsStorage) GetAllByUserID(userID int) ([]model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) GetByUserIdAndId(userId, postId int) (model.Post, error) {
+func (p *PostgresPostsStorage) GetByUserIDAndID(userID, postID int) (model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) Update(userId, postId int, post model.UpdatePost) (model.Post, error) {
+func (p *PostgresPostsStorage) Update(userID, postID int, post model.UpdatePost) (model.Post, error) {
 	panic("implement me")
 }
 
-func (p *PostgresPostsStorage) DeleteByUserIdAndId(userId, postId int) error {
+func (p *PostgresPostsStorage) DeleteByUserIDAndID(userID, postID int) error {
 	panic("implement me")
 }
 

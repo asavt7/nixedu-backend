@@ -76,7 +76,7 @@ func TestUserServiceImpl_GetUserById(t *testing.T) {
 
 	t.Run("ok", func(t *testing.T) {
 		expectedUser := model.User{Email: "email", Username: "username", ID: userID}
-		userStorage.EXPECT().GetById(userID).Return(expectedUser, nil)
+		userStorage.EXPECT().GetByID(userID).Return(expectedUser, nil)
 
 		user, err := userService.GetUserById(userID)
 		if err != nil {
@@ -88,7 +88,7 @@ func TestUserServiceImpl_GetUserById(t *testing.T) {
 
 	t.Run("error", func(t *testing.T) {
 		expectedUser := model.User{Email: "email", Username: "username", ID: userID}
-		userStorage.EXPECT().GetById(userID).Return(expectedUser, model.UserNotFoundErr{Id: userID})
+		userStorage.EXPECT().GetByID(userID).Return(expectedUser, model.UserNotFoundErr{Id: userID})
 
 		_, err := userService.GetUserById(userID)
 		if err == nil {

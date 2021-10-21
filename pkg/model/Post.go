@@ -2,8 +2,8 @@ package model
 
 // Post - user post
 type Post struct {
-	UserId int    `json:"userId" xml:"userId"`
-	Id     int    `json:"id" xml:"id"`
+	UserID int    `json:"userId" xml:"userId"`
+	ID     int    `json:"id" xml:"id"`
 	Title  string `json:"title" xml:"title" validate:"required"`
 	Body   string `json:"body" xml:"body" validate:"required"`
 }
@@ -15,7 +15,7 @@ type UpdatePost struct {
 }
 
 type Album struct {
-	UserId int    `json:"userId" xml:"userId"`
+	UserID int    `json:"userId" xml:"userId"`
 	Id     int    `json:"id" xml:"id"`
 	Title  string `json:"title" xml:"title"`
 }

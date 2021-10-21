@@ -77,10 +77,10 @@ func (p *PostgresUserStorage) Create(user model.User) (model.User, error) {
 }
 
 // GetById - GetById
-func (p *PostgresUserStorage) GetById(userId int) (model.User, error) {
+func (p *PostgresUserStorage) GetByID(userID int) (model.User, error) {
 	var user model.User
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)
-	err := p.db.Get(&user, query, userId)
+	err := p.db.Get(&user, query, userID)
 	if err == sql.ErrNoRows {
 		return user, model.UserNotFoundErr{}
 	}

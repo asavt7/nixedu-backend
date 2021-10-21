@@ -9,23 +9,23 @@ type PostgresCommentsStorage struct {
 	db *sqlx.DB
 }
 
-func (p *PostgresCommentsStorage) GetAllByUserId(userId int) ([]model.Comment, error) {
+func (p *PostgresCommentsStorage) GetAllByUserID(userID int) ([]model.Comment, error) {
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) GetAllByPostId(postId int) ([]model.Comment, error) {
+func (p *PostgresCommentsStorage) GetAllByPostID(postId int) ([]model.Comment, error) {
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) GetByCommentId(commentId int) (model.Comment, error) {
+func (p *PostgresCommentsStorage) GetByCommentID(commentID int) (model.Comment, error) {
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) Update(userId, postId, commentId int, comment model.UpdateComment) (model.Comment, error) {
+func (p *PostgresCommentsStorage) Update(userID, postID, commentID int, comment model.UpdateComment) (model.Comment, error) {
 	panic("implement me")
 }
 
-func (p *PostgresCommentsStorage) DeleteByUserIdAndId(userId, commentId int) error {
+func (p *PostgresCommentsStorage) DeleteByUserIDAndID(userID, commentID int) error {
 	panic("implement me")
 }
 

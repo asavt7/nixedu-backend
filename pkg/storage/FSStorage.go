@@ -19,7 +19,7 @@ func NewFsStorage(basePath string) *FsStorage {
 func (f *FsStorage) SaveAll(posts []model.Post) ([]model.Post, error) {
 
 	for _, post := range posts {
-		pathToFile := path.Join(f.basePath, "posts", strconv.Itoa(post.Id)+".txt")
+		pathToFile := path.Join(f.basePath, "posts", strconv.Itoa(post.ID)+".txt")
 
 		content, err := json.MarshalIndent(post, "", "    ")
 		if err != nil {

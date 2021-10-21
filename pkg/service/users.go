@@ -19,7 +19,7 @@ func (u *UserServiceImpl) CreateUser(user model.User, password string) (model.Us
 }
 
 func (u *UserServiceImpl) GetUserById(id int) (model.User, error) {
-	return u.repo.GetById(id)
+	return u.repo.GetByID(id)
 }
 
 func (u UserServiceImpl) GetUserByEmail(email string) (model.User, error) {

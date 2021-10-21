@@ -9,18 +9,18 @@ import (
 
 type PostService interface {
 	GetAll() ([]model.Post, error)
-	GetAllByUserId(userId int) ([]model.Post, error)
-	GetByUserIdAndPostId(userId, postId int) (model.Post, error)
-	Save(userId int, post model.Post) (model.Post, error)
-	Update(userId, postId int, updatePost model.UpdatePost) (model.Post, error)
-	DeletePost(userId, postId int) error
+	GetAllByUserID(userID int) ([]model.Post, error)
+	GetByUserIDAndPostID(userID, postID int) (model.Post, error)
+	Save(userID int, post model.Post) (model.Post, error)
+	Update(userID, postID int, updatePost model.UpdatePost) (model.Post, error)
+	DeletePost(userID, postID int) error
 }
 
 type CommentService interface {
 	GetAllByPostId(postId int) ([]model.Comment, error)
 	Save(postId int, comment model.Comment) (model.Comment, error)
-	Update(currentUserId, commentId int, comment model.UpdateComment) (model.Comment, error)
-	Delete(currentUserId, commentId int) error
+	Update(currentuserID, commentID int, comment model.UpdateComment) (model.Comment, error)
+	Delete(currentuserID, commentID int) error
 }
 
 type UserService interface {
@@ -32,7 +32,7 @@ type UserService interface {
 // AuthorizationService interface contains methods for working with tokens
 type AuthorizationService interface {
 	CheckUserCredentials(username string, password string) (model.User, error)
-	GenerateTokens(userId int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error)
+	GenerateTokens(userID int) (accessToken, refreshToken string, accessExp, refreshExp time.Time, err error)
 	ParseAccessTokenToClaims(token string) (*Claims, error)
 	ParseRefreshTokenToClaims(token string) (*Claims, error)
 	IsNeedToRefresh(claims *Claims) bool
