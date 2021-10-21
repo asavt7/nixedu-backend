@@ -67,12 +67,12 @@ func (p *PostgresPostsStorage) Update(userID, postID int, post model.UpdatePost)
 	if post.Title != nil {
 		updateArgs = append(updateArgs, "title")
 		updateVals = append(updateVals, *post.Title)
-		argNum += 1
+		argNum++
 	}
 	if post.Body != nil {
 		updateArgs = append(updateArgs, "body")
 		updateVals = append(updateVals, *post.Body)
-		argNum += 1
+		argNum++
 	}
 
 	updateVals = append(updateVals, userID, postID)
