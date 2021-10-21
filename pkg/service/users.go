@@ -18,7 +18,7 @@ func (u *UserServiceImpl) CreateUser(user model.User, password string) (model.Us
 	return u.repo.Create(user)
 }
 
-func (u *UserServiceImpl) GetUserById(id int) (model.User, error) {
+func (u *UserServiceImpl) GetUserByID(id int) (model.User, error) {
 	return u.repo.GetByID(id)
 }
 

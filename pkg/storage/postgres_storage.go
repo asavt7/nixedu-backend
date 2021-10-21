@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	usersTable = "nix.users"
-	postsTable = "nix.posts"
+	usersTable    = "nix.users"
+	postsTable    = "nix.posts"
+	commentsTable = "nix.comments"
 )
 
 // PostgresStorage - postgres storage implementation

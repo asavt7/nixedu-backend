@@ -13,7 +13,6 @@ type PostsStorage interface {
 }
 
 type CommentsStorage interface {
-	SaveAll(posts []model.Comment) ([]model.Comment, error)
 	Save(c model.Comment) (model.Comment, error)
 
 	GetAllByUserID(userID int) ([]model.Comment, error)

@@ -6,7 +6,6 @@ import (
 	"github.com/asavt7/nixEducation/pkg/model"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
-	"strings"
 )
 
 type PostgresPostsStorage struct {
@@ -78,7 +77,7 @@ func (p *PostgresPostsStorage) Update(userID, postID int, post model.UpdatePost)
 	updateVals = append(updateVals, userID, postID)
 
 	setExpression := convertToSetStrs(updateArgs)
-	query := fmt.Sprintf("UPDATE %s SET %s WHERE userid=$%d AND id=$%d", postsTable, setExpression, argNum+1, argNum+2)
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE userid=$%d AND id=$%d RETURNING *", postsTable, setExpression, argNum+1, argNum+2)
 
 	err := p.db.Get(&resultPost, query, updateVals...)
 	if err != nil {
@@ -87,23 +86,15 @@ func (p *PostgresPostsStorage) Update(userID, postID int, post model.UpdatePost)
 	return resultPost, err
 }
 
-func convertToSetStrs(args []string) string {
-	strs := make([]string, 0)
-	for i, v := range args {
-		strs = append(strs, fmt.Sprintf("%s=$%d", v, i+1))
-	}
-	return strings.Join(strs, ", ")
-}
-
 func (p *PostgresPostsStorage) DeleteByUserIDAndID(userID, postID int) error {
-	var id int
+	var id *int
 	query := fmt.Sprintf("DELETE FROM %s WHERE userid=$1 AND id=$2 RETURNING id", postsTable)
 	err := p.db.Get(&id, query, userID, postID)
 	if err != nil {
 		log.Error(err.Error())
 	}
-	if &id == nil {
-		return model.PostNotFoundErr{Id: postID}
+	if id == nil {
+		return model.PostNotFoundErr{ID: postID}
 	}
 	return err
 }

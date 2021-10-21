@@ -138,7 +138,7 @@ func TestPostgresUserStorage_FindByEmail(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
 			got, err := tt.s.FindByEmail(tt.user.Email)
-			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: 0}) {
+			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{ID: 0}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
@@ -196,7 +196,7 @@ func TestPostgresUserStorage_GetById(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
 			got, err := tt.s.GetByID(tt.user.ID)
-			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: tt.user.ID}) {
+			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{ID: tt.user.ID}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
@@ -253,7 +253,7 @@ func TestPostgresUserStorage_FindByUsername(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
 			got, err := tt.s.FindByUsername(tt.user.Username)
-			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: 0}) {
+			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{ID: 0}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
@@ -310,7 +310,7 @@ func TestPostgresUserStorage_GetByUsernameAndPasswordHash(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock()
 			got, err := tt.s.GetByUsernameAndPasswordHash(tt.user.Username, tt.user.PasswordHash)
-			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{Id: 0}) {
+			if ((err != nil) != tt.wantErr) && (err != model.UserNotFoundErr{ID: 0}) {
 				t.Errorf(" error new = %v, wantErr %v", err, tt.wantErr)
 				return
 			}

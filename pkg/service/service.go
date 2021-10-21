@@ -25,7 +25,7 @@ type CommentService interface {
 
 type UserService interface {
 	CreateUser(user model.User, password string) (model.User, error)
-	GetUserById(id int) (model.User, error)
+	GetUserByID(id int) (model.User, error)
 	GetUserByEmail(email string) (model.User, error)
 }
 

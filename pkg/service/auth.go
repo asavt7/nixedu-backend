@@ -58,14 +58,14 @@ func (s *AuthorizationServiceImpl) ValidateAccessToken(accessTokenClaims *Claims
 }
 
 func (s *AuthorizationServiceImpl) validateToken(accessTokenClaims *Claims, tokenFromCashedFunc func(model.CachedTokens) string) error {
-	userId := accessTokenClaims.UserID
-	clientTokenUuid := accessTokenClaims.UID
+	userID := accessTokenClaims.UserID
+	clientTokenUID := accessTokenClaims.UID
 
-	cached, err := s.tokenStore.Get(userId)
+	cached, err := s.tokenStore.Get(userID)
 	if err != nil {
 		return err
 	}
-	if tokenFromCashedFunc(cached) != clientTokenUuid {
+	if tokenFromCashedFunc(cached) != clientTokenUID {
 		return errors.New("invalid token")
 	}
 	return nil

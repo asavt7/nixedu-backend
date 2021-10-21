@@ -26,7 +26,7 @@ func TestCommentServiceImpl_GetAllByPostID(t *testing.T) {
 
 	comments := []model.Comment{{
 		PostID: 1,
-		Id:     1,
+		ID:     1,
 		UserID: 1,
 		Body:   "qwe",
 	}}
@@ -41,7 +41,7 @@ func TestCommentServiceImpl_GetAllByPostID(t *testing.T) {
 		assert.Equal(t, comments, actual)
 	})
 	t.Run("err", func(t *testing.T) {
-		mock.EXPECT().GetAllByPostID(1).Return(comments, model.PostNotFoundErr{Id: 1})
+		mock.EXPECT().GetAllByPostID(1).Return(comments, model.PostNotFoundErr{ID: 1})
 		_, err := s.GetAllByPostID(1)
 		if err == nil {
 			t.Errorf("err should not be nil")
@@ -62,7 +62,7 @@ func TestCommentServiceImpl_Delete(t *testing.T) {
 		}
 	})
 	t.Run("err", func(t *testing.T) {
-		mock.EXPECT().DeleteByUserIDAndID(1, 1).Return(model.CommentNotFoundErr{Id: 1})
+		mock.EXPECT().DeleteByUserIDAndID(1, 1).Return(model.CommentNotFoundErr{ID: 1})
 		err := s.Delete(1, 1)
 		if err == nil {
 			t.Errorf("err should not be nil")
@@ -76,7 +76,7 @@ func TestCommentServiceImpl_Save(t *testing.T) {
 
 	comment := model.Comment{
 		PostID: 1,
-		Id:     1,
+		ID:     1,
 		UserID: 1,
 		Body:   "qwe",
 	}
@@ -91,7 +91,7 @@ func TestCommentServiceImpl_Save(t *testing.T) {
 		assert.Equal(t, comment, actual)
 	})
 	t.Run("err", func(t *testing.T) {
-		mock.EXPECT().Save(comment).Return(comment, model.PostNotFoundErr{Id: 1})
+		mock.EXPECT().Save(comment).Return(comment, model.PostNotFoundErr{ID: 1})
 		_, err := s.Save(comment)
 		if err == nil {
 			t.Errorf("err should not be nil")
@@ -108,7 +108,7 @@ func TestCommentServiceImpl_Update(t *testing.T) {
 
 	comment := model.Comment{
 		PostID: 1,
-		Id:     1,
+		ID:     1,
 		UserID: 1,
 		Body:   body,
 	}

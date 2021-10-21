@@ -16,21 +16,21 @@ type UpdatePost struct {
 
 type Album struct {
 	UserID int    `json:"userId" xml:"userId"`
-	Id     int    `json:"id" xml:"id"`
+	ID     int    `json:"id" xml:"id"`
 	Title  string `json:"title" xml:"title"`
 }
 
 type Photo struct {
-	AlbumId      int    `json:"albumId" xml:"albumId"`
-	Id           int    `json:"id" xml:"id"`
+	AlbumID      int    `json:"albumId" xml:"albumId"`
+	ID           int    `json:"id" xml:"id"`
 	Title        string `json:"title" xml:"title"`
-	Url          string `json:"url" xml:"url"`
-	ThumbnailUrl string `json:"thumbnailUrl" xml:"thumbnailUrl"`
+	URL          string `json:"url" xml:"url"`
+	ThumbnailURL string `json:"thumbnailUrl" xml:"thumbnailUrl"`
 }
 
 type Todo struct {
-	UserId    int    `json:"userId" xml:"userId"`
-	Id        int    `json:"id" xml:"id"`
+	UserID    int    `json:"userId" xml:"userId"`
+	ID        int    `json:"id" xml:"id"`
 	Title     string `json:"title" xml:"title"`
 	Completed bool   `json:"completed" xml:"completed"`
 }
