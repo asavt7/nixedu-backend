@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   backend-app:
-    image: nix-edu-backend:latest
+    image: nixedu-backend:latest
     build:
       target: app
       dockerfile: Dockerfile
