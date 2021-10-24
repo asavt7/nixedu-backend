@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/asavt7/nixedu/backend/pkg/config"
-	"github.com/asavt7/nixedu/backend/pkg/server"
-	"github.com/asavt7/nixedu/backend/pkg/service"
-	"github.com/asavt7/nixedu/backend/pkg/storage"
-	"github.com/asavt7/nixedu/backend/pkg/tokenstorage"
+	"github.com/asavt7/nixedu/backend/internal/config"
+	"github.com/asavt7/nixedu/backend/internal/server"
+	"github.com/asavt7/nixedu/backend/internal/service"
+	"github.com/asavt7/nixedu/backend/internal/storage"
+	"github.com/asavt7/nixedu/backend/internal/tokenstorage"
 	"time"
 )
 
