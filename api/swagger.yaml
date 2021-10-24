@@ -1,0 +1,616 @@
+basePath: /api/v1
+definitions:
+  model.Comment:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      postId:
+        type: integer
+      userId:
+        type: integer
+    required:
+    - body
+    - postId
+    - userId
+    type: object
+  model.Post:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      userId:
+        type: integer
+    required:
+    - body
+    - title
+    type: object
+  model.UpdateComment:
+    properties:
+      body:
+        type: string
+    required:
+    - body
+    type: object
+  model.UpdatePost:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  server.message:
+    properties:
+      message:
+        type: string
+    type: object
+  server.signInResponse:
+    properties:
+      access-token:
+        type: string
+      refresh-token:
+        type: string
+    type: object
+  server.signInUserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  server.signUpUserInput:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a backend for nix tasks https://education.nixsolutions.com/mod/page/view.php?id=79
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: NIX_EDU_APP
+  version: "1.0"
+paths:
+  /api/v1/users/{userId}/posts:
+    get:
+      consumes:
+      - application/json
+      - text/xml
+      description: get posts by userId
+      operationId: getUserPosts
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Post'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: getUserPosts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: createPost
+      operationId: createPost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/model.Post'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              description: /api/v1/users/{userId}/posts/{postId}
+              type: string
+          schema:
+            $ref: '#/definitions/model.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: createPost
+      tags:
+      - posts
+  /api/v1/users/{userId}/posts/{postId}:
+    delete:
+      consumes:
+      - application/json
+      - text/xml
+      description: deletePost
+      operationId: deletePost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/model.Post'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: deletePost
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      - text/xml
+      description: getUserPostByID
+      operationId: getUserPostByID
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Post'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: getUserPostByID
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      - text/xml
+      description: updatePost
+      operationId: updatePost
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePost'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Post'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: updatePost
+      tags:
+      - posts
+  /api/v1/users/{userId}/posts/{postId}/comments:
+    get:
+      consumes:
+      - application/json
+      - text/xml
+      description: getCommentsByPostID
+      operationId: getCommentsByPostID
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: postId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Comment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: getCommentsByPostID
+      tags:
+      - comments
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: createComment
+      operationId: createComment
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: postId
+        required: true
+        type: integer
+      - description: post
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/model.Comment'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: createComment
+      tags:
+      - comments
+  /api/v1/users/{userId}/posts/{postId}/comments/{commentId}:
+    delete:
+      consumes:
+      - application/json
+      - text/xml
+      description: deleteComment
+      operationId: deleteComment
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: postId
+        required: true
+        type: integer
+      - description: commentId
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: deleteComment
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      - text/xml
+      description: updateComment
+      operationId: updateComment
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: postId
+        in: path
+        name: postId
+        required: true
+        type: integer
+      - description: commentId
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      - description: post
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateComment'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      security:
+      - ApiKeyAuth: []
+      summary: updateComment
+      tags:
+      - comments
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - healthcheck
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: signIn and get access and refresh tokens
+      operationId: signIn
+      parameters:
+      - description: body
+        in: body
+        name: signInUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/server.signInUserInput'
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.signInResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      summary: signIn
+      tags:
+      - auth
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      description: signUp new user
+      operationId: signUp
+      parameters:
+      - description: a body
+        in: body
+        name: signUpUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/server.signUpUserInput'
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.message'
+      summary: signUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -66,7 +66,7 @@ docker-compose-dev-up:	## Run local dev environment
 
 .PHONY: swagger
 swagger:	## Generate swagger api specs
-	swag init  --dir ./cmd,./pkg --parseInternal true
+	swag init -o ./api/ --dir ./cmd/server,./internal --parseInternal true
 
 
 .PHONY: docs
