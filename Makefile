@@ -10,7 +10,7 @@ PROJECT_NAME=nixedu-backend
 
 .PHONY: build
 build:	## Compile the code into an executable application
-	go build -v -o ./bin/main ./cmd/main.go
+	go build -v -o ./bin/main ./cmd/server/main.go
 
 
 .PHONY: docker-build
@@ -20,7 +20,7 @@ docker-build:	## Build docker image
 
 .PHONY: run
 run:	## Run application
-	go run ./cmd/main.go
+	go run ./cmd/server/main.go
 
 
 .PHONY: cover
@@ -39,7 +39,7 @@ mocks: ## Generate mocks
 
 .PHONY: test
 test: mocks ## Run golang tests
-	go test -race -v -coverprofile=coverage.out -cover `go list ./... | grep -v mocks`
+	go test -race  -coverprofile=coverage.out -cover `go list ./... | grep -v mocks `
 
 
 .PHONY: migrate-up
@@ -52,17 +52,17 @@ migrate-down:	## rollback db migrations
 
 .PHONY: linter
 linter:	## Run linter for *.go files
-	revive -config .linter.config.toml -formatter unix ./...
+	revive -config .linter.config.toml  -exclude ./vendor/... -formatter unix ./...
 
 
 .PHONY: docker-compose-up
 docker-compose-up:	## Run application and app environment in docker
-	docker-compose up db redis backend-app
+	docker-compose up db redis backend-app migrate
 
 
 .PHONY: docker-compose-dev-up
 docker-compose-dev-up:	## Run local dev environment
-	docker-compose up db redis
+	docker-compose up db redis migrate
 
 .PHONY: swagger
 swagger:	## Generate swagger api specs

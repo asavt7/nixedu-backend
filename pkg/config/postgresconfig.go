@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// PostgresConfig - configs for connection to postgres db
+// PostgresConfig - config for connection to postgres db
 type PostgresConfig struct {
 	Host, Port, Username, Password, DBName string
 	SSLMode                                string
@@ -16,7 +16,7 @@ func (p PostgresConfig) String() string {
 	return fmt.Sprintf("postgres host=%s port=%s db=%s ssl=%s ", p.Host, p.Port, p.DBName, p.SSLMode)
 }
 
-// InitPostgresConfig read configs from envs\config files and returns PostgresConfig
+// InitPostgresConfig read config from envs\config files and returns PostgresConfig
 func InitPostgresConfig() PostgresConfig {
 	op := PostgresConfig{
 		Host:     viper.GetString("pg.host"),
@@ -26,6 +26,6 @@ func InitPostgresConfig() PostgresConfig {
 		DBName:   viper.GetString("pg.dbname"),
 		SSLMode:  viper.GetString("pg.sslmode"),
 	}
-	log.Infof("Postgres configs %v", op)
+	log.Infof("Postgres config %v", op)
 	return op
 }

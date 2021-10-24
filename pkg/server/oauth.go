@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/asavt7/nixedu/backend/pkg/configs"
+	"github.com/asavt7/nixedu/backend/pkg/config"
 	"github.com/asavt7/nixedu/backend/pkg/model"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -20,7 +20,7 @@ var (
 )
 
 func init() {
-	googleOauthConfig = configs.InitGoogleOAuthConfigs()
+	googleOauthConfig = config.InitGoogleOAuthConfigs()
 }
 
 func (h *APIHandler) handleGoogleLogin(context echo.Context) error {

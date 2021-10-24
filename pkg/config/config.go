@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	log "github.com/sirupsen/logrus"
@@ -6,7 +6,8 @@ import (
 )
 import "github.com/spf13/viper"
 
-func init() {
+// InitConfigs ReadConfigsFromFileAndEnv
+func InitConfigs() {
 
 	viper.AutomaticEnv() // Get the value of the environment variable
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -15,13 +16,13 @@ func init() {
 	viper.AddConfigPath("./configs/") // Define file path
 	err := viper.ReadInConfig()       // Read
 	if err != nil {
-		log.Fatalln("read config failed: %v", err)
+		log.Fatalf("read config failed: %v", err)
 	}
 
 	// set logger level
 	level, err := log.ParseLevel(viper.GetString("loglevel"))
 	if err != nil {
-		log.Fatalln("parse log level failed: %v", err)
+		log.Fatalf("parse log level failed: %v", err)
 	}
 	log.SetLevel(level)
 
