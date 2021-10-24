@@ -15,7 +15,6 @@ build:	## Compile the code into an executable application
 
 .PHONY: docker-build
 docker-build:	## Build docker image
-	go mod vendor
 	docker build -t ${PROJECT_NAME} .
 
 
@@ -45,15 +44,21 @@ test: mocks ## Run golang tests
 
 .PHONY: migrate-up
 migrate-up:	## run db migration scripts
-	migrate -path ./migrations/ -database 'postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}' up
+	migrate -path ./migrations/ -database 'postgres://${PG_USERNAME}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_NAME}?sslmode=${PG_SSLMODE}' up
 
 .PHONY: migrate-down
 migrate-down:	## rollback db migrations
-	migrate -path ./migrations/ -database 'postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}' down
+	migrate -path ./migrations/ -database 'postgres://${PG_USERNAME}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_NAME}?sslmode=${PG_SSLMODE}' down
 
 .PHONY: linter
 linter:	## Run linter for *.go files
 	revive -config .linter.config.toml -formatter unix ./...
+
+
+.PHONY: docker-compose-up
+docker-compose-up:	## Run application and app environment in docker
+	docker-compose up db redis backend-app
+
 
 .PHONY: docker-compose-dev-up
 docker-compose-dev-up:	## Run local dev environment
