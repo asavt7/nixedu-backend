@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/asavt7/nixedu/backend/pkg/configs"
+	"github.com/asavt7/nixedu/backend/pkg/config"
 	"github.com/asavt7/nixedu/backend/pkg/server"
 	"github.com/asavt7/nixedu/backend/pkg/service"
 	"github.com/asavt7/nixedu/backend/pkg/storage"
@@ -23,11 +23,12 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	config.InitConfigs()
 
-	db := storage.NewPostgreDb(configs.InitPostgresConfig())
+	db := storage.NewPostgreDb(config.InitPostgresConfig())
 	store := storage.NewPostgresStorage(db)
 
-	redisCacheStore := tokenstorage.InitRedisClient(configs.InitRedisConf())
+	redisCacheStore := tokenstorage.InitRedisClient(config.InitRedisConf())
 	tokenStore := tokenstorage.NewTokenStorage(redisCacheStore, 10*time.Minute)
 
 	srvc := service.NewService(store, tokenStore)

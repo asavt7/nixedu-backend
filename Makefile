@@ -10,18 +10,17 @@ PROJECT_NAME=nixedu-backend
 
 .PHONY: build
 build:	## Compile the code into an executable application
-	go build -v -o ./bin/main ./cmd/main.go
+	go build -v -o ./bin/main ./cmd/server/main.go
 
 
 .PHONY: docker-build
 docker-build:	## Build docker image
-	go mod vendor
 	docker build -t ${PROJECT_NAME} .
 
 
 .PHONY: run
 run:	## Run application
-	go run ./cmd/main.go
+	go run ./cmd/server/main.go
 
 
 .PHONY: cover
@@ -40,24 +39,30 @@ mocks: ## Generate mocks
 
 .PHONY: test
 test: mocks ## Run golang tests
-	go test -race -v -coverprofile=coverage.out -cover `go list ./... | grep -v mocks`
+	go test -race  -coverprofile=coverage.out -cover `go list ./... | grep -v mocks `
 
 
 .PHONY: migrate-up
 migrate-up:	## run db migration scripts
-	migrate -path ./migrations/ -database 'postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}' up
+	migrate -path ./migrations/ -database 'postgres://${PG_USERNAME}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_NAME}?sslmode=${PG_SSLMODE}' up
 
 .PHONY: migrate-down
 migrate-down:	## rollback db migrations
-	migrate -path ./migrations/ -database 'postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}' down
+	migrate -path ./migrations/ -database 'postgres://${PG_USERNAME}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_NAME}?sslmode=${PG_SSLMODE}' down
 
 .PHONY: linter
 linter:	## Run linter for *.go files
-	revive -config .linter.config.toml -formatter unix ./...
+	revive -config .linter.config.toml  -exclude ./vendor/... -formatter unix ./...
+
+
+.PHONY: docker-compose-up
+docker-compose-up:	## Run application and app environment in docker
+	docker-compose up db redis backend-app migrate
+
 
 .PHONY: docker-compose-dev-up
 docker-compose-dev-up:	## Run local dev environment
-	docker-compose up db redis
+	docker-compose up db redis migrate
 
 .PHONY: swagger
 swagger:	## Generate swagger api specs

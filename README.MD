@@ -4,7 +4,6 @@
 ![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/badges/quality-score.png?b=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/?branch=master)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/asavt7/nixedu-backend)
-![Codacy Grade](https://img.shields.io/codacy/grade/c9467ed47e064b1981e53862d0286d65)
 ![Github Repository Size](https://img.shields.io/github/repo-size/asavt7/nixedu-backend)
 ![Github Open Issues](https://img.shields.io/github/issues/asavt7/nixedu-backend)
 ![Lines of code](https://img.shields.io/tokei/lines/github/asavt7/nixedu-backend)
@@ -52,7 +51,14 @@
 - Linter https://github.com/mgechev/revive
 
 
-## Окружение для разработки
+## Локальный запуск приложения в docker
+
+```bash
+make docker-compose-up
+```
+
+
+## Запуск окружения для разработки
 
 ```bash
 make docker-compose-dev-up
