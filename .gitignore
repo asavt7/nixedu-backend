@@ -3,3 +3,5 @@ mocks
 bin
 report
 vendor
+./coverage.out
+coverage.out

@@ -1,3 +1,18 @@
+![Github CI/CD](https://img.shields.io/github/workflow/status/asavt7/nixedu-backend/Go)
+![Go Report](https://goreportcard.com/badge/github.com/asavt7/nixedu-backend)
+![Repository Top Language](https://img.shields.io/github/languages/top/asavt7/nixedu-backend)
+![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/badges/quality-score.png?b=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/asavt7/nixedu-backend/?branch=master)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/asavt7/nixedu-backend)
+![Codacy Grade](https://img.shields.io/codacy/grade/c9467ed47e064b1981e53862d0286d65)
+![Github Repository Size](https://img.shields.io/github/repo-size/asavt7/nixedu-backend)
+![Github Open Issues](https://img.shields.io/github/issues/asavt7/nixedu-backend)
+![Lines of code](https://img.shields.io/tokei/lines/github/asavt7/nixedu-backend)
+![License](https://img.shields.io/badge/license-MIT-green)
+![GitHub last commit](https://img.shields.io/github/last-commit/asavt7/nixedu-backend)
+![GitHub contributors](https://img.shields.io/github/contributors/asavt7/nixedu-backend)
+
+
 # Решение задач курса [education.nixsolutions.com по Golang](https://education.nixsolutions.com/course/view.php?id=12)
 
 ## Требования

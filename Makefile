@@ -25,10 +25,9 @@ run:	## Run application
 
 
 .PHONY: cover
-cover:	## run tests and show test coverage
-	go test -race -v -coverprofile=./report/coverage.out -cover `go list ./... | grep -v mocks`
-	go tool cover -func=./report/coverage.out
-	go tool cover -html=./report/coverage.out
+cover: test	## run tests and show test coverage
+	go tool cover -func=coverage.out
+	go tool cover -html=coverage.out
 
 
 MOCKS_DESTINATION=mocks
@@ -41,7 +40,7 @@ mocks: ## Generate mocks
 
 .PHONY: test
 test: mocks ## Run golang tests
-	go test -v -race -timeout 30s ./...
+	go test -race -v -coverprofile=coverage.out -cover `go list ./... | grep -v mocks`
 
 
 .PHONY: migrate-up
