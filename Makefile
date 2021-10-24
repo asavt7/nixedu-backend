@@ -1,7 +1,7 @@
 include .env
 export
 
-PROJECT_NAME=nix-edu-backend
+PROJECT_NAME=nixedu-backend
 
 ## ----------------------------------------------------------------------
 ## 		A little manual for using this Makefile.
